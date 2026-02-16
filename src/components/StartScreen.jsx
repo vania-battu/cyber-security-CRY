@@ -39,13 +39,21 @@ const StartScreen = ({ onStart }) => {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            fontFamily: '"Outfit", sans-serif',
+            fontFamily: '"Riona Sans W01 Regular", sans-serif',
             zIndex: 200,
             overflow: 'hidden'
         }}>
             {/* Logo at the top */}
-            <div style={{ position: 'absolute', top: '30px', zIndex: 10 }}>
-                <img src={cryLogo} alt="CRY Logo" style={{ height: '90px', objectFit: 'contain' }} />
+            <div style={{
+                position: 'absolute',
+                top: '0',
+                zIndex: 10,
+                backgroundColor: 'white',
+                padding: '10px 30px',
+                borderRadius: '0 0 25px 25px',
+                boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+            }}>
+                <img src={cryLogo} alt="CRY Logo" style={{ height: '80px', objectFit: 'contain' }} />
             </div>
 
             {/* Main Form Card */}
@@ -91,7 +99,8 @@ const StartScreen = ({ onStart }) => {
                     <h1 style={{
                         color: backgroundRed,
                         fontSize: '3.5rem',
-                        fontWeight: '900',
+                        fontWeight: 'normal',
+                        fontFamily: '"Riona Sans W04 Black", sans-serif',
                         marginBottom: '20px',
                         margin: 0,
                     }}>Hello!!</h1>
@@ -190,7 +199,8 @@ const StartScreen = ({ onStart }) => {
                             border: 'none',
                             borderRadius: '40px',
                             fontSize: '2rem',
-                            fontWeight: '900',
+                            fontWeight: 'normal',
+                            fontFamily: '"Riona Sans W04 Black", sans-serif',
                             cursor: 'pointer',
                             transition: 'all 0.1s',
                             boxShadow: '0 6px 0 #cc7a00',

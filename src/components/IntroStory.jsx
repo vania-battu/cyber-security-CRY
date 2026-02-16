@@ -99,7 +99,7 @@ const IntroStory = ({ onComplete }) => {
                 color: 'white',
                 padding: '10px 20px',
                 borderRadius: '20px',
-                fontFamily: '"Outfit", sans-serif',
+                fontFamily: '"Riona Sans W01 Regular", sans-serif',
                 pointerEvents: 'none',
                 opacity: isFading ? 0 : 1,
                 transition: 'opacity 0.3s'
@@ -123,7 +123,7 @@ const IntroStory = ({ onComplete }) => {
                     border: '1px solid rgba(255,255,255,0.3)',
                     padding: '8px 24px',
                     borderRadius: '20px',
-                    fontFamily: '"Outfit", sans-serif',
+                    fontFamily: '"Riona Sans W01 Regular", sans-serif',
                     fontSize: '1rem',
                     fontWeight: 'bold',
                     cursor: 'pointer',

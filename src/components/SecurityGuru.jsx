@@ -33,9 +33,9 @@ const SecurityGuru = ({ levelData, onStartBossBattle }) => {
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 1000,
-            fontFamily: '"Outfit", sans-serif',
+            fontFamily: '"Riona Sans W01 Regular", sans-serif',
             overflow: 'hidden',
-            padding: '20px'
+            padding: '100px 20px 20px 20px'
         }}>
             {/* Animated Background Elements */}
             <div style={{
@@ -86,47 +86,13 @@ const SecurityGuru = ({ levelData, onStartBossBattle }) => {
                 gap: '30px',
                 textAlign: 'center'
             }}>
-                {/* Header */}
                 <div>
-                    <h3 style={{ color: theme.main, fontSize: '1.2rem', fontWeight: '900', letterSpacing: '2px', marginBottom: '10px' }}>
-                        SECURITY GURU'S FACT FLASH
+                    <h3 style={{ color: theme.main, fontSize: '1.2rem', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', letterSpacing: '2px', marginBottom: '10px' }}>
+                        BOSS LEVEL CHALLENGE
                     </h3>
-                    <h2 style={{ color: '#fff', fontSize: '2.5rem', fontWeight: '900' }}>
+                    <h2 style={{ color: '#fff', fontSize: '2.5rem', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif' }}>
                         {title}
                     </h2>
-                </div>
-
-                {/* Guru Tip Box */}
-                <div style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                    padding: '30px',
-                    borderRadius: '30px',
-                    borderLeft: `8px solid ${theme.main}`,
-                    textAlign: 'left',
-                    position: 'relative'
-                }}>
-                    <p style={{
-                        color: '#fff',
-                        fontSize: '1.4rem',
-                        lineHeight: '1.5',
-                        margin: 0,
-                        fontStyle: 'italic'
-                    }}>
-                        "{guruTip}"
-                    </p>
-                    <div style={{
-                        position: 'absolute',
-                        top: '-15px',
-                        left: '20px',
-                        backgroundColor: theme.main,
-                        color: '#000',
-                        padding: '4px 15px',
-                        borderRadius: '10px',
-                        fontSize: '0.8rem',
-                        fontWeight: '900'
-                    }}>
-                        CRY STUDY FINDING
-                    </div>
                 </div>
 
                 <hr style={{ width: '50%', border: 'none', borderTop: '1px solid rgba(255,255,255,0.2)' }} />
@@ -143,7 +109,7 @@ const SecurityGuru = ({ levelData, onStartBossBattle }) => {
                         border: '1px solid #ff4444'
                     }}>
                         <span style={{ fontSize: '1.5rem' }}>⚠️</span>
-                        <span style={{ color: '#ff4444', fontWeight: '900', fontSize: '1.2rem' }}>BOSS BATTLE: {villain.toUpperCase()}</span>
+                        <span style={{ color: '#ff4444', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', fontSize: '1.2rem' }}>BOSS BATTLE: {villain.toUpperCase()}</span>
                     </div>
                     <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.2rem', maxWidth: '700px', lineHeight: '1.4' }}>
                         {bossBrief}
@@ -158,7 +124,8 @@ const SecurityGuru = ({ levelData, onStartBossBattle }) => {
                         marginTop: '10px',
                         padding: '20px 60px',
                         fontSize: '1.5rem',
-                        fontWeight: '900',
+                        fontWeight: 'normal',
+                        fontFamily: '"Riona Sans W04 Black", sans-serif',
                         backgroundColor: theme.main,
                         color: id === 1 ? '#000' : '#fff',
                         border: 'none',

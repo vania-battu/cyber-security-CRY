@@ -98,7 +98,7 @@ const LandingScreen = ({ onFinishLoading }) => {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            fontFamily: '"Outfit", sans-serif',
+            fontFamily: '"Riona Sans W01 Regular", sans-serif',
             zIndex: 300,
             overflow: 'hidden',
             color: 'white'
@@ -131,8 +131,15 @@ const LandingScreen = ({ onFinishLoading }) => {
             </div>
 
             {/* Logo */}
-            <div style={{ marginTop: '20px', zIndex: 10 }}>
-                <img src={cryLogo} alt="CRY Logo" style={{ height: '90px', objectFit: 'contain' }} />
+            <div style={{
+                marginTop: '0',
+                zIndex: 10,
+                backgroundColor: 'white',
+                padding: '10px 40px',
+                borderRadius: '0 0 30px 30px',
+                boxShadow: '0 5px 15px rgba(0,0,0,0.2)'
+            }}>
+                <img src={cryLogo} alt="CRY Logo" style={{ height: '80px', objectFit: 'contain' }} />
             </div>
 
             {/* Main Title Area */}
@@ -145,19 +152,21 @@ const LandingScreen = ({ onFinishLoading }) => {
                 lineHeight: '0.85'
             }}>
                 <h1 style={{
-                    fontSize: '6rem',
+                    fontSize: '6.5rem',
                     color: accentYellow,
                     margin: 0,
-                    fontWeight: '900',
+                    fontWeight: 'normal',
+                    fontFamily: '"Riona Sans W04 Black", sans-serif',
                     textTransform: 'none',
                     letterSpacing: '-2px',
                     textShadow: '4px 4px 15px rgba(0,0,0,0.5)'
                 }}>Cyber</h1>
                 <h1 style={{
-                    fontSize: '6rem',
+                    fontSize: '6.5rem',
                     color: accentYellow,
                     margin: 0,
-                    fontWeight: '900',
+                    fontWeight: 'normal',
+                    fontFamily: '"Riona Sans W04 Black", sans-serif',
                     textTransform: 'none',
                     letterSpacing: '-2px',
                     textShadow: '4px 4px 15px rgba(0,0,0,0.5)'
@@ -220,8 +229,9 @@ const LandingScreen = ({ onFinishLoading }) => {
                                 color: 'white',
                                 border: 'none',
                                 borderRadius: '40px',
-                                fontSize: '1.6rem',
-                                fontWeight: 'bold',
+                                fontSize: '1.8rem',
+                                fontWeight: 'normal',
+                                fontFamily: '"Riona Sans W04 Black", sans-serif',
                                 cursor: 'pointer',
                                 transition: 'all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                                 boxShadow: '0 8px 0 #cc7a00, 0 10px 25px rgba(0,0,0,0.4)',

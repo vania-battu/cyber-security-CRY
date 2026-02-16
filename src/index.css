@@ -1,3 +1,37 @@
+@font-face {
+  font-family: "Riona Sans W04 Black";
+  src: url("/OnlineWebFonts_COM_19183d7aa4ce9a59cd44ae64d8fc2566/Riona Sans W04 Black/Web Fonts/c87cf23d055242a982a9d67b083c606a.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Riona Sans W01 Regular";
+  src: url("/OnlineWebFonts_COM_0468ac9b434cbaaae5627c3b5b150998/Riona Sans W01 Regular/Web Fonts/6caf4d27e271767286c1ddbf1a582b44.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Goodlife W00 Sans Condensed";
+  src: url("/OnlineWebFonts_COM_898f5e584049bca14e43516a08b0622a/Goodlife W00 Sans Condensed/Web Fonts/a21708fe222d7e751c4f7ced3ad9dfc6.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "KG Second Chances Solid";
+  src: url("/kg_second_chances/KGSecondChancesSolid.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "KG Second Chances Sketch";
+  src: url("/kg_second_chances/KGSecondChancesSketch.ttf") format("truetype");
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -7,6 +41,7 @@
 body {
   overflow: hidden;
   background-color: #222;
+  font-family: "Riona Sans W01 Regular", sans-serif;
 }
 
 canvas {

@@ -135,59 +135,57 @@ export const surakshaLevels = [
         bossBrief: "The shadows are a perfect place to hide mean words. I make others feel small while hiding behind a screen. Can you shine the light on cyberbullying?",
         questions: [
             {
-                scenario: "A person you met in an online game sends you a 'gift' (a rare skin) and says, 'Let's talk on a private app where your parents can't see.'",
+                scenario: "Which of these is an example of cyberbullying?",
                 options: [
-                    "Say thanks for the gift and move to the private app.",
-                    "Block them; true friends don't ask you to hide things from family.",
-                    "Tell them you'll talk later when your parents are asleep.",
-                    "Ask them why they want to be private."
+                    "Disagreeing with someone in a group chat",
+                    "Sharing a funny meme with friends",
+                    "Posting someone’s embarrassing photo without their permission to make others laugh",
+                    "Blocking someone you don’t know"
+                ],
+                correctIndex: 2,
+                fact: "Cyberbullying involves intentional harm through digital platforms."
+            },
+            {
+                scenario: "If someone sends you mean or threatening messages online, what should you do FIRST?",
+                options: [
+                    "Reply with something mean",
+                    "Share it with everyone",
+                    "Delete your account immediately",
+                    "Save evidence and tell a trusted adult"
+                ],
+                correctIndex: 3,
+                fact: "Saving evidence is crucial for reporting and taking action."
+            },
+            {
+                scenario: "Your friend asks you to forward a rumour about a classmate. What is the safest choice?",
+                options: [
+                    "Forward it quickly",
+                    "Ask others if it’s true",
+                    "Ignore it and don’t spread it",
+                    "Post it anonymously"
+                ],
+                correctIndex: 2,
+                fact: "Stopping the spread of rumours is a powerful way to end bullying."
+            },
+            {
+                scenario: "Cyberbullying only happens between strangers.",
+                options: [
+                    "True",
+                    "False"
                 ],
                 correctIndex: 1,
-                fact: "The request for 'Secrecy' is the primary warning sign of grooming."
+                fact: "Cyberbullying can happen between people who know each other well."
             },
             {
-                scenario: "You see a group of kids posting 'memes' about a classmate that are actually very mean. They say, 'It's just a joke, don't be a baby.'",
+                scenario: "You see someone being bullied in an online game chat. What can you do?",
                 options: [
-                    "Like the post so you stay 'cool' with the group.",
-                    "Stay silent and don't comment at all.",
-                    "Tell the group it’s not funny and report the post to the platform.",
-                    "Private message the classmate and tell them to ignore it."
+                    "Report the bully and support the person being targeted",
+                    "Watch quietly",
+                    "Join the teasing",
+                    "Leave the game"
                 ],
-                correctIndex: 2,
-                fact: "Being an 'Upstander' rather than a 'Bystander' stops bullying."
-            },
-            {
-                scenario: "Someone online threatens to share a private photo of you unless you send them more photos.",
-                options: [
-                    "Send more photos so they stay happy and don't share the first one.",
-                    "Delete your account and discard your phone.",
-                    "Don't send anything, save the chat as evidence, and tell a trusted adult.",
-                    "Threaten them back so they get scared."
-                ],
-                correctIndex: 2,
-                fact: "Giving in to 'Sextortion' or threats only leads to more demands."
-            },
-            {
-                scenario: "A 'talent scout' messages you on Instagram saying they can make you a famous model if you send some videos.",
-                options: [
-                    "Send the videos; it could be your big break!",
-                    "Check if their profile has a 'Verified' blue tick.",
-                    "Ask a parent to help you verify if the agency is real.",
-                    "Send a video but cover your face so it's safe."
-                ],
-                correctIndex: 2,
-                fact: "Professional agencies will always want to talk to a guardian, never just the child."
-            },
-            {
-                scenario: "How can you tell if an online friend is actually the age they say they are?",
-                options: [
-                    "If they use the same slang and talk about the same games.",
-                    "If their profile picture looks like a kid.",
-                    "You can't; people can easily lie about their identity online.",
-                    "If they have a lot of other kids as friends on their list."
-                ],
-                correctIndex: 2,
-                fact: "This teaches the core lesson of 'Online Anonymity'."
+                correctIndex: 0,
+                fact: "Being an 'Upstander' stops bullying faster than being a bystander."
             }
         ]
     },
@@ -201,17 +199,21 @@ export const surakshaLevels = [
             {
                 scenario: "An online friend asks you to 'keep a secret' from your parents about your chats. Is this okay?",
                 options: [
-                    "Yes, friends have secrets.",
-                    "No! Healthy friendships don't require hiding things from parents."
+                    "Yes, friends have secrets, and privacy is important for teenagers.",
+                    "No! Healthy friendships don’t require hiding things from parents; this is a major red flag for grooming.",
+                    "It’s fine as long as you aren’t doing anything illegal or dangerous.",
+                    "Yes, but only if you have known them for more than six months and trust them."
                 ],
                 correctIndex: 1,
                 fact: "Healthy friendships don't require hiding things from parents."
             },
             {
-                scenario: "A stranger online says, 'I am 14 years old like you,' but they don't want to show their face.",
+                scenario: "A stranger online says, 'I am 14 years old like you,' but they refuse to video call or show their face.",
                 options: [
-                    "Believe them; they are just shy.",
-                    "Be careful; people can easily lie about their age online."
+                    "Believe them; many people are just camera-shy or have 'social anxiety' online.",
+                    "Be careful; people can easily lie about their age, and 'catfishing' is a common way to gain trust.",
+                    "Ask them to send a static photo instead; if the photo looks real, they are telling the truth.",
+                    "Assume they are a celebrity or someone famous who needs to keep their identity a secret."
                 ],
                 correctIndex: 1,
                 fact: "People can easily lie about their age online."
@@ -219,17 +221,21 @@ export const surakshaLevels = [
             {
                 scenario: "Someone you met online asks to meet you at a mall alone. What do you do?",
                 options: [
-                    "Go, but tell a friend.",
-                    "Never go. If you must meet, take a parent or adult with you."
+                    "Go, but stay in a crowded area and share your 'Live Location' with a friend.",
+                    "Never go alone. If you must meet, tell a parent and have them accompany you the entire time.",
+                    "Video call them first to prove who they are; if they look like their profile, it’s safe to meet.",
+                    "Agree to meet, but bring a pocket knife or pepper spray just in case something goes wrong."
                 ],
                 correctIndex: 1,
                 fact: "Never meet an online friend alone."
             },
             {
-                scenario: "What should you never share with a 'game friend'?",
+                scenario: "What should you never share with a 'game friend' or online contact?",
                 options: [
-                    "Your favorite game character.",
-                    "Your home address, school name, or phone number."
+                    "Your favorite game character or your 'main' strategy.",
+                    "Sensitive data like your home address, school name, or current location.",
+                    "Your first name, since many people have the same first name anyway.",
+                    "Your general city or state, as long as you don't give the specific street address."
                 ],
                 correctIndex: 1,
                 fact: "Never share sensitive personal info like address or phone number."
@@ -237,8 +243,10 @@ export const surakshaLevels = [
             {
                 scenario: "You accidentally saw an 'adult' or scary video online. What should you do?",
                 options: [
-                    "Keep watching out of curiosity.",
-                    "Close the tab and tell an adult so they can help you block it."
+                    "Keep watching to see if it gets better or to understand what it is.",
+                    "Close the tab immediately and tell a trusted adult so they can help you report or block it.",
+                    "Just close the tab and try to forget about it; telling an adult might get you in trouble.",
+                    "Clear your browser history so your parents don't think you were looking for it on purpose."
                 ],
                 correctIndex: 1,
                 fact: "Always tell an adult if you see something uncomfortable online."

@@ -89,7 +89,7 @@ const LevelSuccess = ({ levelIdx, stars, score, onNext, onRetry, onExit }) => {
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 600,
-            fontFamily: '"Outfit", sans-serif',
+            fontFamily: '"Riona Sans W01 Regular", sans-serif',
             overflow: 'hidden'
         }}>
             {/* Designer Border Background */}
@@ -116,10 +116,10 @@ const LevelSuccess = ({ levelIdx, stars, score, onNext, onRetry, onExit }) => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 textAlign: 'center',
-                padding: '40px'
+                padding: '100px 40px 40px 40px'
             }}>
                 <div style={{ marginBottom: '10px' }}>
-                    <h1 style={{ fontSize: '3.5rem', margin: 0, color: data.textColor || data.accentColor, fontWeight: '900', letterSpacing: '2px' }}>COMPLETED!!</h1>
+                    <h1 style={{ fontSize: '3.5rem', margin: 0, color: data.textColor || data.accentColor, fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', letterSpacing: '2px' }}>COMPLETED!!</h1>
                 </div>
 
                 {/* Stars */}
@@ -202,7 +202,8 @@ const LevelSuccess = ({ levelIdx, stars, score, onNext, onRetry, onExit }) => {
                             border: 'none',
                             borderRadius: '50px',
                             fontSize: '2.5rem',
-                            fontWeight: '900',
+                            fontWeight: 'normal',
+                            fontFamily: '"Riona Sans W04 Black", sans-serif',
                             cursor: 'pointer',
                             boxShadow: '0 8px 0 #ccaa00, 0 10px 20px rgba(0,0,0,0.3)',
                             transition: 'all 0.1s'

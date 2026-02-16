@@ -241,9 +241,13 @@ function App() {
           transform: 'translateX(-50%)',
           zIndex: 1000,
           pointerEvents: 'none',
-          animation: 'fadeIn 1s ease-out'
+          animation: 'fadeIn 1s ease-out',
+          backgroundColor: 'white',
+          padding: '10px 20px',
+          borderRadius: '0 0 20px 20px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
         }}>
-          <img src={cryLogo} alt="CRY Logo" style={{ height: '100px', filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))' }} />
+          <img src={cryLogo} alt="CRY Logo" style={{ height: '70px', objectFit: 'contain' }} />
         </div>
       )}
       {gameState === 'LANDING' && <LandingScreen onFinishLoading={() => setGameState('START')} />}
@@ -306,9 +310,9 @@ function App() {
           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
           backgroundColor: '#E4296B', color: '#fff',
           display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          zIndex: 500, fontFamily: '"Outfit", sans-serif', textAlign: 'center'
+          zIndex: 500, fontFamily: '"Riona Sans W01 Regular", sans-serif', textAlign: 'center'
         }}>
-          <h1 style={{ fontSize: '4.5rem', fontWeight: '900', color: '#ffd806', marginBottom: '20px' }}>DON'T GIVE UP!</h1>
+          <h1 style={{ fontSize: '4.5rem', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', marginBottom: '20px' }}>DON'T GIVE UP!</h1>
           <p style={{ fontSize: '1.8rem', marginBottom: '40px', maxWidth: '600px', lineHeight: '1.4' }}>
             That was a tough one, but every Hero learns from their mistakes. <br />
             <b>Let's try again!</b>
@@ -323,7 +327,8 @@ function App() {
                 cursor: 'pointer',
                 borderRadius: '50px',
                 border: 'none',
-                fontWeight: '900',
+                fontWeight: 'normal',
+                fontFamily: '"Riona Sans W04 Black", sans-serif',
                 backgroundColor: '#ffd806',
                 color: 'black',
                 boxShadow: '0 8px 0 #6B8E2D, 0 10px 20px rgba(0,0,0,0.3)',
@@ -343,9 +348,9 @@ function App() {
           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
           backgroundColor: '#E4296B', color: '#fff',
           display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          zIndex: 300, fontFamily: '"Outfit", sans-serif', textAlign: 'center'
+          zIndex: 300, fontFamily: '"Riona Sans W01 Regular", sans-serif', textAlign: 'center'
         }}>
-          <h1 style={{ fontSize: '4rem', fontWeight: '900', color: '#ff4444' }}>MISSION FAILED</h1>
+          <h1 style={{ fontSize: '4rem', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ff4444' }}>MISSION FAILED</h1>
           <p style={{ fontSize: '1.8rem', marginBottom: '10px' }}>Don't give up, {playerInfo?.name}!</p>
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.1)',
@@ -358,10 +363,10 @@ function App() {
             <p style={{ fontSize: '1.2rem', opacity: 0.8 }}>Score: {Math.floor(score)}</p>
           </div>
           <div style={{ display: 'flex', gap: '20px' }}>
-            <button onClick={handleRestart} style={{ padding: '15px 40px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontWeight: 'bold', backgroundColor: '#ffd806', color: 'black' }}>
+            <button onClick={handleRestart} style={{ padding: '15px 40px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               RETRY MISSION
             </button>
-            <button onClick={handleDownloadReport} style={{ padding: '15px 40px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontWeight: 'bold', backgroundColor: 'transparent', color: '#fff' }}>
+            <button onClick={handleDownloadReport} style={{ padding: '15px 40px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
               GET SAFETY REPORT
             </button>
           </div>
@@ -373,10 +378,10 @@ function App() {
           position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
           backgroundColor: '#E4296B', color: '#fff',
           display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          zIndex: 300, fontFamily: '"Outfit", sans-serif', textAlign: 'center',
+          zIndex: 300, fontFamily: '"Riona Sans W01 Regular", sans-serif', textAlign: 'center',
           paddingTop: '100px'
         }}>
-          <h1 style={{ fontSize: '4.5rem', fontWeight: '900', color: '#ffd806', textShadow: '0 4px 20px rgba(140,182,61,0.4)' }}>CYBER CHAMPION!</h1>
+          <h1 style={{ fontSize: '4.5rem', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', textShadow: '0 4px 20px rgba(140,182,61,0.4)' }}>CYBER CHAMPION!</h1>
           <p style={{ fontSize: '1.8rem', marginBottom: '10px' }}>Outstanding work, {playerInfo?.name}!</p>
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.1)',
@@ -389,14 +394,14 @@ function App() {
             <p style={{ fontSize: '1.3rem' }}>Safety Master: <b>{questionHistory.filter(h => h.isCorrect).length}/{questionHistory.length}</b> Correct</p>
           </div>
           <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '800px' }}>
-            <button onClick={handleShare} style={{ padding: '18px 40px', fontSize: '1.3rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontWeight: 'bold', backgroundColor: '#ffd806', color: 'black', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <button onClick={handleShare} style={{ padding: '18px 40px', fontSize: '1.3rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span>SHARE THIS GAME- READY LINK</span>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.66 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" /></svg>
             </button>
-            <button onClick={handleDownloadReport} style={{ padding: '18px 40px', fontSize: '1.3rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontWeight: 'bold', backgroundColor: 'transparent', color: '#fff' }}>
+            <button onClick={handleDownloadReport} style={{ padding: '18px 40px', fontSize: '1.3rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
               DOWNLOAD PERFORMANCE CARD
             </button>
-            <button onClick={handleRestart} style={{ padding: '18px 40px', fontSize: '1.3rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontWeight: 'bold', backgroundColor: '#ffd806', color: 'black' }}>
+            <button onClick={handleRestart} style={{ padding: '18px 40px', fontSize: '1.3rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               PLAY AGAIN
             </button>
           </div>

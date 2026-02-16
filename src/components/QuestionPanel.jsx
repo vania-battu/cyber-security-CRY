@@ -113,7 +113,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             alignItems: 'center',
             zIndex: 500,
             overflow: 'hidden',
-            fontFamily: '"Outfit", sans-serif'
+            fontFamily: '"Riona Sans W01 Regular", sans-serif'
         }}>
             {/* The Designer Border Frame */}
             <div style={{
@@ -139,7 +139,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding: isMobile ? '20px 40px' : '40px 100px',
+                padding: isMobile ? '80px 40px 20px 40px' : '100px 100px 40px 100px',
                 boxSizing: 'border-box',
                 animation: 'fadeIn 0.5s ease-out'
             }}>
@@ -149,19 +149,21 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                     top: isMobile ? '20px' : '50px',
                     right: isMobile ? '40px' : '80px',
                     color: config.accentColor,
-                    fontWeight: '900',
-                    fontSize: isMobile ? '1.2rem' : '1.8rem',
-                    textShadow: '0 0 10px rgba(0,0,0,0.5)'
+                    fontFamily: '"Riona Sans W04 Black", sans-serif',
+                    fontSize: isMobile ? '1rem' : '1.4rem',
+                    textShadow: '0 0 10px rgba(0,0,0,0.5)',
+                    opacity: 0.8
                 }}>
                     QUESTION {currentQuestionIndex} / {totalQuestions}
                 </div>
 
                 <div style={{ maxWidth: '1000px', width: '100%', textAlign: 'center' }}>
                     <h2 style={{
-                        fontSize: isMobile ? '1.8rem' : '3.2rem',
-                        marginBottom: isMobile ? '20px' : '60px',
-                        marginTop: isMobile ? '40px' : '0',
-                        fontWeight: '900',
+                        fontSize: isMobile ? '1.8rem' : '2.2rem',
+                        marginBottom: isMobile ? '20px' : '40px',
+                        marginTop: '0',
+                        fontWeight: 'normal',
+                        fontFamily: '"Riona Sans W04 Black", sans-serif',
                         lineHeight: '1.2',
                         color: config.textColor,
                         textShadow: levelIdx >= 2 ? '3px 3px 8px rgba(0,0,0,0.8)' : '1px 1px 2px rgba(255,255,255,0.8)'
@@ -251,7 +253,8 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                                         fontSize: isMobile ? '1rem' : '1.3rem',
                                         color: 'white',
                                         flexShrink: 0,
-                                        fontWeight: '900',
+                                        fontFamily: '"Riona Sans W04 Black", sans-serif',
+                                        fontWeight: 'normal',
                                         boxShadow: '0 4px 6px rgba(0,0,0,0.2)'
                                     }}>
                                         {String.fromCharCode(65 + index)}
