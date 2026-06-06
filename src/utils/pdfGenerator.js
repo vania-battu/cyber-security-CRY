@@ -38,7 +38,7 @@ export const generateSafetyReport = (playerInfo, score, history, logoBase64) => 
     doc.setFontSize(14);
     doc.setTextColor(0, 0, 0);
     const pageHeight = doc.internal.pageSize.getHeight();
-    const maxWidth = pageWidth - 40;
+    //const maxWidth = pageWidth - 40;
     doc.text(`Hero Name: ${playerInfo.name}`, 20, currentY);
     currentY += 10;
     doc.text(`Age: ${playerInfo.age}`, 20, currentY);
