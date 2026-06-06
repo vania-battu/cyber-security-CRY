@@ -63,7 +63,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             case 3: // Level 4
                 return {
                     frame: frameBlue,
-                    textColor: '#ffffff',
+                    textColor: '#4e342e',
                     accentColor: '#6B2F67', // CRY Purple
                     buttonBg: 'rgba(0, 0, 0, 0.75)',
                     buttonBorder: '#6B2F67',
@@ -72,7 +72,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             case 4: // Level 5
                 return {
                     frame: frameDark,
-                    textColor: '#E4296B', // CRY Pink
+                    textColor: '#e0e59e', // CRY Pink
                     accentColor: '#E4296B',
                     buttonBg: 'rgba(0, 0, 0, 0.85)',
                     buttonBorder: '#E4296B',
@@ -186,7 +186,8 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
 
                             let bgColor = config.buttonBg;
                             let borderColor = config.buttonBorder;
-                            let textColor = config.textColor;
+                            //let textColor = question.id === 4? '#ffffff':config.textColor;
+                            let textColor = levelIdx === 3 ? '#ffffff' : config.textColor;
 
                             if (showResult) {
                                 if (isCorrect) {

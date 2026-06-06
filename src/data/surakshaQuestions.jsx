@@ -71,12 +71,12 @@ export const surakshaLevels = [
         bossBrief: "I've cast my line into the digital ocean, and many children are biting! Can you spot the difference between a real message and my clever traps?",
         questions: [
             {
-                scenario: "You get a WhatsApp message from an unknown number with your photo as the DP, saying: 'I’m in trouble, please send the OTP sent to your phone.'",
+                scenario: `You get a WhatsApp message from an unknown number using your friend's photo as the profile picture. The message says: "I'm in trouble! Please send me the OTP sent to your phone." What should you do?`,
                 options: [
-                    "Send it; it’s an emergency and they have your photo.",
-                    "Ask 'Who is this?' before sending anything.",
-                    "Call the person they are pretending to be on their real number to check.",
-                    "Ignore it; they will ask someone else if it's important."
+                    "Send the OTP quickly to help your friend.",
+                    "Reply and ask why they need the OTP.",
+                    "Call your friend on their real number first to check if it’s really them.",
+                    "Share only part of the OTP."
                 ],
                 correctIndex: 2,
                 fact: "Verification outside the chat is the only way to beat 'Impersonation Phishing'."
@@ -104,12 +104,12 @@ export const surakshaLevels = [
                 fact: "Scammers use 'Urgency' and 'Fear' to make people click without thinking."
             },
             {
-                scenario: "You are looking for a 'Mod' to get free skins in a game. You find a site that says 'Download our special browser to get the skins.'",
+                scenario: "You are playing Free Fire/BGMI and see a link saying: ‘Get free diamonds instantly! Download this app now!’ What should you do?",
                 options: [
-                    "Download it; it’s just a browser.",
-                    "Don't download; 'special browsers' often contain spyware to watch you.",
-                    "Scan it with an antivirus and then download.",
-                    "Download it but don't give it permission to use the camera."
+                    "Download it quickly — many gamers use it.",
+                    "Avoid downloading it — such apps can steal your data or hack your device.",
+                    "Download it first and delete it later if it looks suspicious.",
+                    "Ask your friend to try it before you use it."
                 ],
                 correctIndex: 1,
                 fact: "Third-party software 'bundles' are the #1 way to get malware."
@@ -170,11 +170,13 @@ export const surakshaLevels = [
             {
                 scenario: "Cyberbullying only happens between strangers.",
                 options: [
-                    "True",
-                    "False"
+                    "True - strangers are the only ones who bully online",
+                    "False - it can happen between friends, classmates, or strangers",
+                    "Only in online games",
+                    "Only if someone shares their password"
                 ],
                 correctIndex: 1,
-                fact: "Cyberbullying can happen between people who know each other well."
+                fact: "Cyberbullying can happen between friends, classmates, or strangers."
             },
             {
                 scenario: "You see someone being bullied in an online game chat. What can you do?",

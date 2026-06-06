@@ -46,7 +46,8 @@ const LevelSuccess = ({ levelIdx, stars, score, onNext, onRetry, onExit }) => {
                     friendImg: mitaliImg,
                     villainName: "Shadow Bully",
                     frame: frameL3,
-                    accentColor: '#F16723', // CRY Orange
+                    accentColor: '#F16723',
+                   // textColor:'#000000',// CRY Orange
                     filter: 'none'
                 };
             case 3:
@@ -56,7 +57,8 @@ const LevelSuccess = ({ levelIdx, stars, score, onNext, onRetry, onExit }) => {
                     friendImg: aliahImg,
                     villainName: "The Deceiver",
                     frame: frameL4,
-                    accentColor: '#6B2F67', // CRY Purple
+                    accentColor: '#6B2F67',// CRY Purple
+                    textColor: '#b540aa', 
                     filter: 'hue-rotate(90deg) saturate(1.5)'
                 };
             case 4:
@@ -147,7 +149,13 @@ const LevelSuccess = ({ levelIdx, stars, score, onNext, onRetry, onExit }) => {
                     ))}
                 </div>
 
-                <p style={{ fontSize: '1.8rem', color: '#444', maxWidth: '700px', fontWeight: '600', marginBottom: '60px', lineHeight: '1.4' }}>
+                <p style={{ fontSize: '1.8rem',color: levelIdx === 2 ? '#ffffff' : 
+                levelIdx === 4 ? '#e1c62a' :
+                '#444',  // ✅ ONLY Level 3 changes
+  maxWidth: '700px',
+  fontWeight: '600',
+  marginBottom: '60px',
+  lineHeight: '1.4' }}>
                     You helped Priya defeat <strong style={{ color: data.accentColor }}>{data.villainName}</strong> and save <strong style={{ color: data.accentColor }}>{data.friendName}</strong> !!
                 </p>
 
