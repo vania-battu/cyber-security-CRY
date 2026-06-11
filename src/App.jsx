@@ -161,12 +161,15 @@ function App() {
     }
   };
 
-  const handleShare = async () => {
-    const shareData = {
-      title: 'I am a Cyber Safety Hero!',
-      text: `I just scored ${Math.floor(score)} points in CyberSafe Kids! Can you beat my score?`,
-      url: window.location.href
-    };
+ const handleShare = async () => {
+  const shareData = {
+    title: "I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.",
+    text: `My score : ${Math.floor(score)} 🏆\n\nCan you do better? Play, learn, and challenge 3 more friends!\n🎮 https://cyber-champ-cry.vercel.app/\n\nFor more on CRY's work for children: https://www.cry.org`,
+    url: 'https://cyber-champ-cry.vercel.app/' 
+  };
+
+  
+};
 
     try {
       if (navigator.share) {

@@ -20,26 +20,20 @@ const LandingScreen = ({ onFinishLoading }) => {
     const [progress, setProgress] = useState(0);
     const [phase, setPhase] = useState('LOADING'); // LOADING, INTRO
 
-
-
     useEffect(() => {
         if (phase === 'LOADING') {
             const loadAssets = async () => {
-                // 1. Gather all asset URLs
                 const levels = [level1, level2, level3, level4, level5];
 
-                // Level Backgrounds & Antagonists
                 const levelAssets = levels.flatMap(level => {
                     const bgs = level.backgrounds.map(bg => bg.src);
                     const villain = level.antagonist.src;
                     return [...bgs, villain];
                 });
 
-                // Player Animation Frames
                 const playerGlob = import.meta.glob('../assets/player/run_f*.png', { eager: true, as: 'url' });
                 const playerFrames = Object.values(playerGlob);
 
-                // Static Assets (already imported at top, but let's ensure they are cached by the browser)
                 const staticAssets = [
                     cryLogo, heroGirl, homeBg,
                     f1, f2, f3, f4, f5
@@ -65,7 +59,6 @@ const LandingScreen = ({ onFinishLoading }) => {
                         };
                         img.onerror = () => {
                             console.warn(`Failed to preload asset: ${src}`);
-                            // Still resolve to not block the game
                             updateProgress();
                             resolve();
                         };
@@ -74,7 +67,6 @@ const LandingScreen = ({ onFinishLoading }) => {
 
                 await Promise.all(imagePromises);
 
-                // Ensure 100% is shown for a moment
                 setProgress(100);
                 setTimeout(() => setPhase('INTRO'), 800);
             };
@@ -83,8 +75,6 @@ const LandingScreen = ({ onFinishLoading }) => {
         }
     }, [phase]);
 
-    // Define colors
-    const deepPurple = '#3b1d5f';
     const accentYellow = '#ffd806';
 
     return (
@@ -119,7 +109,6 @@ const LandingScreen = ({ onFinishLoading }) => {
                 <img src={f3} style={{ position: 'absolute', bottom: '15%', left: '20%', height: '450px' }} alt="" />
                 <img src={f4} style={{ position: 'absolute', bottom: '10%', right: '25%', height: '400px' }} alt="" />
                 <img src={f5} style={{ position: 'absolute', top: '40%', left: '45%', height: '380px' }} alt="" />
-                {/* Overlay scribbles if we had them, or just a dark tint */}
                 <div style={{
                     position: 'absolute',
                     top: 0,

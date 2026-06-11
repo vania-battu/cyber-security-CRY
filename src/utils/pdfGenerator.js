@@ -31,7 +31,7 @@ export const generateSafetyReport = (playerInfo, score, history, logoBase64) => 
     // Title
     doc.setFontSize(22);
     doc.setTextColor(59, 29, 95); // Deep Purple
-    doc.text("Cyber Safety Hero Report", pageWidth / 2, currentY, { align: "center" });
+    doc.text("Cyber Champ Performance Report", pageWidth / 2, currentY, { align: "center" });
     currentY += 15;
 
     // Player Info

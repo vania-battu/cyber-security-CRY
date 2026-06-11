@@ -130,7 +130,8 @@ export const surakshaLevels = [
     {
         id: 3,
         title: "The Shadow Bully (Cyberbullying & Reporting)",
-        guruTip: "10% of teenagers experience cyberbullying. Girls report it more often, but boys should also know that reporting is a sign of strength, not weakness! Groomers start by being your 'best friend' and giving you gifts. If an online friend asks you to hide things from your parents, they are trying to isolate you.",
+        guruTip: `10% of teenagers experience cyberbullying. Girls report it more often, but boys should also know that reporting is a sign of strength, not weakness!
+Being cyber-smart means standing up to online bullying. Block, report, save evidence, and reach out to someone you trust—help is always available.`,
         villain: "Shadow Bully",
         bossBrief: "The shadows are a perfect place to hide mean words. I make others feel small while hiding behind a screen. Can you shine the light on cyberbullying?",
         questions: [
@@ -213,44 +214,44 @@ export const surakshaLevels = [
                 scenario: "A stranger online says, 'I am 14 years old like you,' but they refuse to video call or show their face.",
                 options: [
                     "Believe them; many people are just camera-shy or have 'social anxiety' online.",
-                    "Be careful; people can easily lie about their age, and 'catfishing' is a common way to gain trust.",
                     "Ask them to send a static photo instead; if the photo looks real, they are telling the truth.",
+                    "Be careful; people can easily lie about their age, and 'catfishing' is a common way to gain trust.",
                     "Assume they are a celebrity or someone famous who needs to keep their identity a secret."
                 ],
-                correctIndex: 1,
+                correctIndex: 2,
                 fact: "People can easily lie about their age online."
             },
             {
                 scenario: "Someone you met online asks to meet you at a mall alone. What do you do?",
                 options: [
                     "Go, but stay in a crowded area and share your 'Live Location' with a friend.",
-                    "Never go alone. If you must meet, tell a parent and have them accompany you the entire time.",
                     "Video call them first to prove who they are; if they look like their profile, it’s safe to meet.",
-                    "Agree to meet, but bring a pocket knife or pepper spray just in case something goes wrong."
+                    "Agree to meet, but bring a pocket knife or pepper spray just in case something goes wrong.",
+                    "Never go alone. If you must meet, tell a parent and have them accompany you the entire time."
                 ],
-                correctIndex: 1,
+                correctIndex: 3,
                 fact: "Never meet an online friend alone."
             },
             {
                 scenario: "What should you never share with a 'game friend' or online contact?",
                 options: [
-                    "Your favorite game character or your 'main' strategy.",
                     "Sensitive data like your home address, school name, or current location.",
+                    "Your favorite game character or your 'main' strategy.",
                     "Your first name, since many people have the same first name anyway.",
                     "Your general city or state, as long as you don't give the specific street address."
                 ],
-                correctIndex: 1,
+                correctIndex: 0,
                 fact: "Never share sensitive personal info like address or phone number."
             },
             {
                 scenario: "You accidentally saw an 'adult' or scary video online. What should you do?",
                 options: [
                     "Keep watching to see if it gets better or to understand what it is.",
-                    "Close the tab immediately and tell a trusted adult so they can help you report or block it.",
                     "Just close the tab and try to forget about it; telling an adult might get you in trouble.",
+                    "Close the tab immediately and tell a trusted adult so they can help you report or block it.",
                     "Clear your browser history so your parents don't think you were looking for it on purpose."
                 ],
-                correctIndex: 1,
+                correctIndex: 2,
                 fact: "Always tell an adult if you see something uncomfortable online."
             }
         ]
@@ -277,22 +278,22 @@ export const surakshaLevels = [
                 scenario: "You are playing a game and someone is 'Trash Talking' (saying very bad things) to you.",
                 options: [
                     "Talk back even harder to show them you aren't weak.",
-                    "Use the 'Mute' button and continue your game in peace.",
                     "Quit the game and don't play for a week.",
-                    "Try to find their real name to report them to their school."
+                    "Try to find their real name to report them to their school.",
+                    "Use the 'Mute' button and continue your game in peace."
                 ],
-                correctIndex: 1,
+                correctIndex: 3,
                 fact: "Muting is the most effective immediate way to handle 'Toxic Gaming'."
             },
             {
                 scenario: "A game is 'Free to Play' but it keeps showing you pop-ups to buy 'Loot Boxes' to progress.",
                 options: [
-                    "Keep buying them; it's the only way to win.",
                     "Set a strict 'time and money' limit for yourself before you start.",
+                    "Keep buying them; it's the only way to win.",
                     "Find a hacked version of the game to get the boxes for free.",
                     "Ask your parents for their credit card just 'for one time.'"
                 ],
-                correctIndex: 1,
+                correctIndex: 0,
                 fact: "Self-regulation is the key to avoiding 'Problematic Internet Use'."
             },
             {

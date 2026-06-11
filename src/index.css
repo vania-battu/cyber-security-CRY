@@ -39,7 +39,7 @@
 }
 
 body {
-  overflow: hidden;
+  overflow: auto;
   background-color: #222;
   font-family: "Riona Sans W01 Regular", sans-serif;
 }

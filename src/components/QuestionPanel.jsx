@@ -106,18 +106,19 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             top: 0,
             left: 0,
             width: '100%',
-            height: '100%',
+            minHeight: '100%', /* FIX: Allows container to expand dynamically */
             backgroundColor: 'black',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
             zIndex: 500,
-            overflow: 'hidden',
+            overflowY: 'auto', /* FIX: Allows scrolling on tall questions */
+            paddingBottom: isMobile ? '40px' : '0px',
             fontFamily: '"Riona Sans W01 Regular", sans-serif'
         }}>
             {/* The Designer Border Frame */}
             <div style={{
-                position: 'absolute',
+                position: 'fixed', /* FIX: Frame pins safely to viewport during body scrolls */
                 top: 0,
                 left: 0,
                 width: '100%',
@@ -126,31 +127,32 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                 backgroundSize: '100% 100%',
                 backgroundPosition: 'center',
                 filter: config.filter,
-                zIndex: 1
+                zIndex: 1,
+                pointerEvents: 'none' /* FIX: Ensures clicks always hit buttons underneath */
             }} />
 
-            {/* Central Content Area (Transparent to show frame) */}
+            {/* Central Content Area */}
             <div style={{
                 position: 'relative',
                 zIndex: 10,
                 width: '100%',
-                height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding: isMobile ? '80px 40px 20px 40px' : '100px 100px 40px 100px',
+                padding: isMobile ? '80px 24px 20px 24px' : '100px 100px 40px 100px', /* FIX: Reduced padding width to minimize side-clipping */
                 boxSizing: 'border-box',
                 animation: 'fadeIn 0.5s ease-out'
             }}>
                 {/* Progress Indicator */}
                 <div style={{
-                    position: 'absolute',
-                    top: isMobile ? '20px' : '50px',
-                    right: isMobile ? '40px' : '80px',
+                    position: isMobile ? 'relative' : 'absolute', /* FIX: Stacks safely on mobile view, absolute on desktop */
+                    top: isMobile ? 'auto' : '50px',
+                    right: isMobile ? 'auto' : '80px',
+                    marginBottom: isMobile ? '15px' : '0px',
                     color: config.accentColor,
                     fontFamily: '"Riona Sans W04 Black", sans-serif',
-                    fontSize: isMobile ? '1rem' : '1.4rem',
+                    fontSize: isMobile ? '0.9rem' : '1.4rem',
                     textShadow: '0 0 10px rgba(0,0,0,0.5)',
                     opacity: 0.8
                 }}>
@@ -159,12 +161,12 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
 
                 <div style={{ maxWidth: '1000px', width: '100%', textAlign: 'center' }}>
                     <h2 style={{
-                        fontSize: isMobile ? '1.8rem' : '2.2rem',
-                        marginBottom: isMobile ? '20px' : '40px',
+                        fontSize: isMobile ? '1.4rem' : '2.2rem', /* FIX: Slightly scaled down massive headers on small screens */
+                        marginBottom: isMobile ? '25px' : '40px',
                         marginTop: '0',
                         fontWeight: 'normal',
                         fontFamily: '"Riona Sans W04 Black", sans-serif',
-                        lineHeight: '1.2',
+                        lineHeight: '1.3',
                         color: config.textColor,
                         textShadow: levelIdx >= 2 ? '3px 3px 8px rgba(0,0,0,0.8)' : '1px 1px 2px rgba(255,255,255,0.8)'
                     }}>
@@ -174,10 +176,10 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                     <div style={{
                         display: 'grid',
                         gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-                        gap: isMobile ? '15px' : '30px',
+                        gap: isMobile ? '12px' : '30px', /* FIX: Tighter gap on phones */
                         width: '100%',
-                        maxHeight: isMobile ? '60vh' : 'auto',
-                        overflowY: isMobile ? 'auto' : 'visible'
+                        maxHeight: 'none', /* FIX: Prevents container squishing options inside an invisible box */
+                        overflowY: 'visible'
                     }}>
                         {question.options.map((option, index) => {
                             const isSelected = selectedIndex === index;
@@ -186,7 +188,6 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
 
                             let bgColor = config.buttonBg;
                             let borderColor = config.buttonBorder;
-                            //let textColor = question.id === 4? '#ffffff':config.textColor;
                             let textColor = levelIdx === 3 ? '#ffffff' : config.textColor;
 
                             if (showResult) {
@@ -211,8 +212,8 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                                     onClick={() => handleOptionClick(index)}
                                     disabled={isLocked}
                                     style={{
-                                        padding: isMobile ? '15px 20px' : '30px 40px',
-                                        fontSize: isMobile ? '1rem' : '1.4rem',
+                                        padding: isMobile ? '12px 18px' : '30px 40px', /* FIX: Adjusted padding down so blocks don't explode offscreen */
+                                        fontSize: isMobile ? '0.95rem' : '1.4rem', /* FIX: Scale down mobile font readability */
                                         backgroundColor: bgColor,
                                         border: `3px solid ${borderColor}`,
                                         borderRadius: '60px',
@@ -223,7 +224,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                                         textAlign: 'left',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: isMobile ? '10px' : '20px',
+                                        gap: isMobile ? '12px' : '20px',
                                         boxShadow: (isSelected || (showResult && isCorrect)) ? '0 0 20px rgba(0,0,0,0.3)' : config.glow ? `0 0 15px ${config.accentColor}, 0 6px 15px rgba(0,0,0,0.3)` : '0 8px 15px rgba(0,0,0,0.2)',
                                         width: '100%',
                                         outline: 'none',
@@ -232,26 +233,26 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                                     }}
                                     onMouseEnter={(e) => {
                                         if (isLocked) return;
-                                        e.target.style.transform = 'scale(1.04)';
-                                        e.target.style.borderColor = config.accentColor;
-                                        e.target.style.boxShadow = config.glow ? `0 0 25px ${config.accentColor}, 0 10px 20px rgba(0,0,0,0.4)` : '0 12px 25px rgba(0,0,0,0.3)';
+                                        e.currentTarget.style.transform = 'scale(1.04)';
+                                        e.currentTarget.style.borderColor = config.accentColor;
+                                        e.currentTarget.style.boxShadow = config.glow ? `0 0 25px ${config.accentColor}, 0 10px 20px rgba(0,0,0,0.4)` : '0 12px 25px rgba(0,0,0,0.3)';
                                     }}
                                     onMouseLeave={(e) => {
                                         if (isLocked) return;
-                                        e.target.style.transform = 'scale(1)';
-                                        e.target.style.borderColor = borderColor;
-                                        e.target.style.boxShadow = config.glow ? `0 0 15px ${config.accentColor}, 0 6px 15px rgba(0,0,0,0.3)` : '0 8px 15px rgba(0,0,0,0.2)';
+                                        e.currentTarget.style.transform = 'scale(1)';
+                                        e.currentTarget.style.borderColor = borderColor;
+                                        e.currentTarget.style.boxShadow = config.glow ? `0 0 15px ${config.accentColor}, 0 6px 15px rgba(0,0,0,0.3)` : '0 8px 15px rgba(0,0,0,0.2)';
                                     }}
                                 >
                                     <span style={{
-                                        width: isMobile ? '30px' : '50px',
-                                        height: isMobile ? '30px' : '50px',
+                                        width: isMobile ? '28px' : '50px',
+                                        height: isMobile ? '28px' : '50px',
                                         borderRadius: '50%',
                                         backgroundColor: showResult ? (isCorrect ? '#2e7d32' : isSelected ? '#b71c1c' : '#ccc') : config.accentColor,
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        fontSize: isMobile ? '1rem' : '1.3rem',
+                                        fontSize: isMobile ? '0.9rem' : '1.3rem',
                                         color: 'white',
                                         flexShrink: 0,
                                         fontFamily: '"Riona Sans W04 Black", sans-serif',
@@ -260,7 +261,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                                     }}>
                                         {String.fromCharCode(65 + index)}
                                     </span>
-                                    {option}
+                                    <div style={{ flex: 1, wordBreak: 'break-word' }}>{option}</div> {/* FIX: Ensures text cleanly wraps inside button spaces */}
                                 </button>
                             );
                         })}

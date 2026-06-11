@@ -195,7 +195,7 @@ const StartScreen = ({ onStart }) => {
                             marginTop: '40px',
                             padding: '12px 80px',
                             backgroundColor: buttonYellow,
-                            color: 'black', // Contrast for yellow
+                            color: 'black',
                             border: 'none',
                             borderRadius: '40px',
                             fontSize: '2rem',
@@ -273,7 +273,7 @@ const StartScreen = ({ onStart }) => {
                     -moz-appearance: textfield;
                 }
             `}</style>
-        </div >
+        </div>
     );
 };
 
