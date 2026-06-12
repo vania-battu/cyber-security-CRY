@@ -169,37 +169,40 @@ const handleShare = async () => {
   };
 
   try {
+    let sharedSuccessfully = false;
+
     if (navigator.share) {
       await navigator.share(shareData);
+      sharedSuccessfully = true; 
     } else {
-      // Fallback: Copy the comprehensive text to clipboard if Web Share API isn't supported
+      
       const fallbackText = `${shareData.title}\n\n${shareData.text}`;
       await navigator.clipboard.writeText(fallbackText);
       alert("📋 Share details copied to clipboard! Paste it to share with your friends.");
-    } // Closes else
-  } catch (error) { // Correctly linked to try
-    console.error("Error sharing:", error);
-  } // Closes catch
-}; // Closes handleShare
-
-      if (!hasShared) {
-        setHasShared(true);
-        // Update Sheet with Shared = True
-        if (playerInfo) {
-          submitToSheet({
-            ...playerInfo,
-            score: Math.floor(score),
-            finished: true,
-            shared: true,
-            sessionId: sessionId
-          });
-        }
-      }
-    } catch (err) {
-      console.error('Error sharing:', err);
+      sharedSuccessfully = true; 
     }
-  };
 
+   
+    if (sharedSuccessfully && !hasShared) {
+      setHasShared(true);
+      
+      // Update Sheet with Shared = True
+      if (playerInfo) {
+        submitToSheet({
+          ...playerInfo,
+          score: Math.floor(score),
+          finished: true,
+          shared: true,
+          sessionId: sessionId
+        });
+      }
+    }
+
+  } catch (error) {
+    
+    console.error("Error sharing:", error);
+  }
+};
   const handleRestart = () => {
     setGameState('LANDING');
     setQuestionHistory([]);
