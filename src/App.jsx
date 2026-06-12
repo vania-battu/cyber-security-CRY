@@ -161,24 +161,26 @@ function App() {
     }
   };
 
- const handleShare = async () => {
+const handleShare = async () => {
   const shareData = {
     title: "I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.",
     text: `My score : ${Math.floor(score)} 🏆\n\nCan you do better? Play, learn, and challenge 3 more friends!\n🎮 https://cyber-champ-cry.vercel.app/\n\nFor more on CRY's work for children: https://www.cry.org`,
     url: 'https://cyber-champ-cry.vercel.app/' 
   };
 
-  
-};
-
-    try {
-      if (navigator.share) {
-        await navigator.share(shareData);
-      } else {
-        // Fallback for browsers that don't support Web Share API
-        await navigator.clipboard.writeText(`I just scored ${Math.floor(score)} points in CyberSafe Kids! Play here: ${window.location.href}`);
-        alert("Link copied to clipboard! Share it with your friends.");
-      }
+  try {
+    if (navigator.share) {
+      await navigator.share(shareData);
+    } else {
+      // Fallback: Copy the comprehensive text to clipboard if Web Share API isn't supported
+      const fallbackText = `${shareData.title}\n\n${shareData.text}`;
+      await navigator.clipboard.writeText(fallbackText);
+      alert("📋 Share details copied to clipboard! Paste it to share with your friends.");
+    } // Closes else
+  } catch (error) { // Correctly linked to try
+    console.error("Error sharing:", error);
+  } // Closes catch
+}; // Closes handleShare
 
       if (!hasShared) {
         setHasShared(true);
