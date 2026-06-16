@@ -9,95 +9,76 @@ import frameDark from '../assets/questions_panel/questions panel-4.png';
 const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestions, levelIdx }) => {
     const [selectedIndex, setSelectedIndex] = useState(null);
     const [isLocked, setIsLocked] = useState(false);
+    const [shakeIndex, setShakeIndex] = useState(null); 
 
-    // Reset state when question changes
     useEffect(() => {
         setSelectedIndex(null);
         setIsLocked(false);
+        setShakeIndex(null);
     }, [question]);
 
     const handleOptionClick = (index) => {
         if (isLocked) return;
-
         setSelectedIndex(index);
         setIsLocked(true);
-
+        
         const isCorrect = index === question.correctIndex;
+        
+        if (!isCorrect) {
+            setShakeIndex(index);
+        }
 
-        // Delay proceeding so player can see feedback
         setTimeout(() => {
             onAnswer(isCorrect);
         }, 1000);
     };
 
-    // Level-specific configurations
     const getLevelConfig = (idx) => {
         switch (idx) {
-            case 0: // Level 1
-                return {
-                    frame: frameYellow,
-                    textColor: '#4e342e',
-                    accentColor: '#ffd806', // CRY Yellow
-                    buttonBg: 'rgba(255, 255, 255, 0.9)',
-                    buttonBorder: '#ffd806',
-                    filter: 'none'
+            case 0:
+                return { frame: frameYellow, textColor: '#4e342e', accentColor: '#ffd806', buttonBg: '#ffffff', buttonBorder: '#ffd806', pageBg: '#ffffff' };
+            case 1:
+                return { frame: frameBlue, textColor: '#0d47a1', accentColor: '#1CB7B8', buttonBg: '#ffffff', buttonBorder: '#1CB7B8', pageBg: '#ffffff' };
+            case 2:
+                return { frame: frameRed, textColor: '#ffffff', accentColor: '#F16723', buttonBg: 'rgba(28, 12, 12, 0.92)', buttonBorder: '#F16723', pageBg: '#1a1a1a' };
+            case 3:
+                return { 
+                    frame: frameBlue, 
+                    textColor: '#1c110f', // ✅ FIXED: Changed to deep dark brown/black for case 3
+                    accentColor: '#6B2F67', 
+                    buttonBg: 'rgba(0, 0, 0, 0.75)', 
+                    buttonBorder: '#6B2F67', 
+                    filter: 'hue-rotate(240deg) saturate(1.5)', 
+                    pageBg: '#1a1a1a' 
                 };
-            case 1: // Level 2
-                return {
-                    frame: frameBlue,
-                    textColor: '#0d47a1',
-                    accentColor: '#1CB7B8', // CRY Blue
-                    buttonBg: 'rgba(255, 255, 255, 0.9)',
-                    buttonBorder: '#1CB7B8',
-                    filter: 'none'
-                };
-            case 2: // Level 3
-                return {
-                    frame: frameRed,
-                    textColor: '#ffffff',
-                    accentColor: '#F16723', // CRY Orange
-                    buttonBg: 'rgba(0, 0, 0, 0.7)',
-                    buttonBorder: '#F16723',
-                    filter: 'none'
-                };
-            case 3: // Level 4
-                return {
-                    frame: frameBlue,
-                    textColor: '#4e342e',
-                    accentColor: '#6B2F67', // CRY Purple
-                    buttonBg: 'rgba(0, 0, 0, 0.75)',
-                    buttonBorder: '#6B2F67',
-                    filter: 'hue-rotate(240deg) saturate(1.5)' // Adjusted to purple
-                };
-            case 4: // Level 5
-                return {
-                    frame: frameDark,
-                    textColor: '#e0e59e', // CRY Pink
-                    accentColor: '#E4296B',
-                    buttonBg: 'rgba(0, 0, 0, 0.85)',
-                    buttonBorder: '#E4296B',
-                    filter: 'none',
-                    glow: '0 0 15px rgba(228, 41, 107, 0.4)'
-                };
+            case 4:
+                return { frame: frameDark, textColor: '#e0e59e', accentColor: '#E4296B', buttonBg: 'rgba(0, 0, 0, 0.85)', buttonBorder: '#E4296B', glow: '0 0 15px rgba(228, 41, 107, 0.4)', pageBg: '#1a1a1a' };
             default:
-                return {
-                    frame: frameYellow,
-                    textColor: '#333',
-                    accentColor: '#FF9900',
-                    buttonBg: 'white',
-                    buttonBorder: '#ddd'
-                };
+                return { frame: frameYellow, textColor: '#333', accentColor: '#FF9900', buttonBg: 'white', buttonBorder: '#ddd', pageBg: '#ffffff' };
         }
     };
 
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+    const [viewMode, setViewMode] = useState('DESKTOP'); 
 
     useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        const handleResize = () => {
+            const width = window.innerWidth;
+            if (width < 768) {
+                setViewMode('MOBILE');
+            } else if (width >= 768 && width < 1150) {
+                setViewMode('TABLET'); 
+            } else {
+                setViewMode('DESKTOP');
+            }
+        };
+        
+        handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    const isMobile = viewMode === 'MOBILE';
+    const isTablet = viewMode === 'TABLET';
     const config = getLevelConfig(levelIdx);
 
     return (
@@ -106,103 +87,126 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             top: 0,
             left: 0,
             width: '100%',
-            minHeight: '100%', /* FIX: Allows container to expand dynamically */
-            backgroundColor: 'black',
+            height: '100%',
+            backgroundColor: config.pageBg, 
             display: 'flex',
-            justifyContent: 'center',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
             alignItems: 'center',
             zIndex: 500,
-            overflowY: 'auto', /* FIX: Allows scrolling on tall questions */
-            paddingBottom: isMobile ? '40px' : '0px',
-            fontFamily: '"Riona Sans W01 Regular", sans-serif'
+            overflowX: 'hidden',
+            overflowY: 'auto',
+            fontFamily: '"Riona Sans W01 Regular", sans-serif',
+            boxSizing: 'border-box'
         }}>
-            {/* The Designer Border Frame */}
+            {/* Background Frame Layer */}
             <div style={{
-                position: 'fixed', /* FIX: Frame pins safely to viewport during body scrolls */
+                position: 'absolute',
                 top: 0,
                 left: 0,
                 width: '100%',
                 height: '100%',
                 backgroundImage: `url("${config.frame}")`,
-                backgroundSize: '100% 100%',
-                backgroundPosition: 'center',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
+                backgroundRepeat: 'no-repeat',
                 filter: config.filter,
                 zIndex: 1,
-                pointerEvents: 'none' /* FIX: Ensures clicks always hit buttons underneath */
+                pointerEvents: 'none'
             }} />
 
-            {/* Central Content Area */}
+            {/* CORE WRAPPER STAGE BOX */}
             <div style={{
                 position: 'relative',
                 zIndex: 10,
                 width: '100%',
+                maxWidth: isMobile ? '100%' : '1240px', 
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center',
+                justifyContent: 'flex-start',
                 alignItems: 'center',
-                padding: isMobile ? '80px 24px 20px 24px' : '100px 100px 40px 100px', /* FIX: Reduced padding width to minimize side-clipping */
+                padding: isMobile ? '115px 16px 25px 16px' : (isTablet ? '145px 45px 40px 45px' : '155px 40px 30px 40px'), 
                 boxSizing: 'border-box',
-                animation: 'fadeIn 0.5s ease-out'
+                minHeight: '100%'
             }}>
-                {/* Progress Indicator */}
+                
+                {/* Progress Tracker Label */}
                 <div style={{
-                    position: isMobile ? 'relative' : 'absolute', /* FIX: Stacks safely on mobile view, absolute on desktop */
-                    top: isMobile ? 'auto' : '50px',
-                    right: isMobile ? 'auto' : '80px',
-                    marginBottom: isMobile ? '15px' : '0px',
+                    position: 'absolute',
+                    top: isMobile ? '78px' : (isTablet ? '54px' : '58px'), 
+                    right: isMobile ? '28px' : (isTablet ? '55px' : '72px'), 
                     color: config.accentColor,
                     fontFamily: '"Riona Sans W04 Black", sans-serif',
-                    fontSize: isMobile ? '0.9rem' : '1.4rem',
-                    textShadow: '0 0 10px rgba(0,0,0,0.5)',
-                    opacity: 0.8
+                    fontSize: isMobile ? '1.05rem' : '1.35rem',
+                    textShadow: levelIdx >= 2 ? '0 2px 4px rgba(0,0,0,0.5)' : 'none',
+                    letterSpacing: '0.5px',
+                    fontWeight: 'bold',
+                    zIndex: 40
                 }}>
-                    QUESTION {currentQuestionIndex} / {totalQuestions}
+                    {isMobile ? `(${currentQuestionIndex}/${totalQuestions})` : `QUESTION ${currentQuestionIndex} / ${totalQuestions}`}
                 </div>
 
-                <div style={{ maxWidth: '1000px', width: '100%', textAlign: 'center' }}>
-                    <h2 style={{
-                        fontSize: isMobile ? '1.4rem' : '2.2rem', /* FIX: Slightly scaled down massive headers on small screens */
-                        marginBottom: isMobile ? '25px' : '40px',
-                        marginTop: '0',
-                        fontWeight: 'normal',
-                        fontFamily: '"Riona Sans W04 Black", sans-serif',
-                        lineHeight: '1.3',
-                        color: config.textColor,
-                        textShadow: levelIdx >= 2 ? '3px 3px 8px rgba(0,0,0,0.8)' : '1px 1px 2px rgba(255,255,255,0.8)'
-                    }}>
-                        {question.scenario || question.question}
-                    </h2>
-
+                <div style={{ width: '100%', textAlign: 'center' }}>
+                    
                     <div style={{
-                        display: 'grid',
-                        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
-                        gap: isMobile ? '12px' : '30px', /* FIX: Tighter gap on phones */
                         width: '100%',
-                        maxHeight: 'none', /* FIX: Prevents container squishing options inside an invisible box */
-                        overflowY: 'visible'
+                        height: isMobile ? 'auto' : '110px', 
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        marginTop: isMobile ? '5px' : '20px', 
+                        marginBottom: isMobile ? '15px' : '45px',
+                        boxSizing: 'border-box'
+                    }}>
+                        {/* Main Scenario Heading */}
+                        <h2 className="question-text" style={{
+                            fontSize: isMobile ? '1.12rem' : (isTablet ? '1.85rem' : '2.45rem'), 
+                            margin: 0,
+                            fontWeight: 'normal',
+                            fontFamily: '"Riona Sans W04 Black", sans-serif',
+                            lineHeight: '1.35',
+                            color: config.textColor,
+                            // ✅ FIXED: Removes white text blur shadow for case 3 to keep text crisp and clear
+                            textShadow: levelIdx === 3 ? 'none' : ((levelIdx === 0 || levelIdx === 1) ? '0 1px 2px rgba(0,0,0,0.02)' : '2px 3px 6px rgba(0,0,0,0.6)'),
+                            padding: isMobile ? '0 5px' : '0 50px',
+                            wordBreak: 'break-word',
+                            width: '100%'
+                        }}>
+                            {question.scenario || question.question}
+                        </h2>
+                    </div>
+
+                    {/* TWO-COLUMN RESPONSE CONTAINER TRACK */}
+                    <div className="options-grid" style={{ 
+                        display: 'grid',
+                        gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
+                        gap: isMobile ? '12px' : (isTablet ? '24px 30px' : '36px 48px'), 
+                        width: '100%',
+                        maxWidth: '1160px', 
+                        margin: '0 auto',
+                        boxSizing: 'border-box'
                     }}>
                         {question.options.map((option, index) => {
                             const isSelected = selectedIndex === index;
                             const isCorrect = index === question.correctIndex;
                             const showResult = selectedIndex !== null;
+                            const shouldShake = shakeIndex === index;
 
                             let bgColor = config.buttonBg;
                             let borderColor = config.buttonBorder;
-                            let textColor = levelIdx === 3 ? '#ffffff' : config.textColor;
+                            
+                            // Options button text configuration remains exactly the same
+                            let innerTextColor = (levelIdx === 0 || levelIdx === 1) ? config.textColor : '#ffffff';
 
                             if (showResult) {
-                                if (isCorrect) {
-                                    bgColor = '#4caf50';
-                                    borderColor = '#2e7d32';
-                                    textColor = '#ffffff';
-                                } else if (isSelected) {
-                                    bgColor = '#f44336';
-                                    borderColor = '#b71c1c';
-                                    textColor = '#ffffff';
-                                } else {
-                                    bgColor = 'rgba(255, 255, 255, 0.1)';
-                                    borderColor = 'rgba(0, 0, 0, 0.1)';
-                                    textColor = 'rgba(0, 0, 0, 0.3)';
+                                if (isCorrect) { 
+                                    bgColor = '#4caf50'; borderColor = '#2e7d32'; innerTextColor = '#ffffff'; 
+                                } else if (isSelected) { 
+                                    bgColor = '#f44336'; borderColor = '#b71c1c'; innerTextColor = '#ffffff'; 
+                                } else { 
+                                    bgColor = (levelIdx === 0 || levelIdx === 1) ? 'rgba(255, 255, 255, 0.4)' : 'rgba(255, 255, 255, 0.08)'; 
+                                    borderColor = (levelIdx === 0 || levelIdx === 1) ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.15)'; 
+                                    innerTextColor = (levelIdx === 0 || levelIdx === 1) ? 'rgba(78, 52, 46, 0.4)' : 'rgba(255, 255, 255, 0.3)'; 
                                 }
                             }
 
@@ -212,56 +216,54 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                                     onClick={() => handleOptionClick(index)}
                                     disabled={isLocked}
                                     style={{
-                                        padding: isMobile ? '12px 18px' : '30px 40px', /* FIX: Adjusted padding down so blocks don't explode offscreen */
-                                        fontSize: isMobile ? '0.95rem' : '1.4rem', /* FIX: Scale down mobile font readability */
+                                        fontSize: isMobile ? '0.88rem' : '1.25rem', 
                                         backgroundColor: bgColor,
-                                        border: `3px solid ${borderColor}`,
-                                        borderRadius: '60px',
+                                        border: `2px solid ${borderColor}`, 
+                                        borderRadius: '60px', 
+                                        padding: isMobile ? '12px 18px' : '28px 45px', 
                                         cursor: isLocked ? 'default' : 'pointer',
-                                        transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                                        fontWeight: '700',
-                                        color: textColor,
+                                        transition: 'background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.1s ease',
+                                        fontWeight: '700', 
+                                        color: innerTextColor,
                                         textAlign: 'left',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: isMobile ? '12px' : '20px',
-                                        boxShadow: (isSelected || (showResult && isCorrect)) ? '0 0 20px rgba(0,0,0,0.3)' : config.glow ? `0 0 15px ${config.accentColor}, 0 6px 15px rgba(0,0,0,0.3)` : '0 8px 15px rgba(0,0,0,0.2)',
+                                        gap: isMobile ? '10px' : '24px', 
+                                        boxShadow: (levelIdx === 0 || levelIdx === 1) ? '0 8px 20px rgba(0,0,0,0.06)' : '0 8px 16px rgba(0,0,0,0.35)', 
                                         width: '100%',
-                                        outline: 'none',
-                                        transform: isSelected ? 'scale(1.05)' : 'scale(1)',
-                                        animation: (isSelected && !isCorrect) ? 'shake 0.4s ease-in-out' : (isSelected && isCorrect) ? 'correctPop 0.5s ease-out' : 'none'
+                                        height: 'auto', 
+                                        minHeight: isMobile ? 'auto' : '110px', 
+                                        boxSizing: 'border-box',
+                                        lineHeight: isMobile ? '1.35' : '1.45',
+                                        animation: shouldShake ? 'wrongNudge 0.4s ease-in-out' : 'none'
                                     }}
                                     onMouseEnter={(e) => {
-                                        if (isLocked) return;
-                                        e.currentTarget.style.transform = 'scale(1.04)';
-                                        e.currentTarget.style.borderColor = config.accentColor;
-                                        e.currentTarget.style.boxShadow = config.glow ? `0 0 25px ${config.accentColor}, 0 10px 20px rgba(0,0,0,0.4)` : '0 12px 25px rgba(0,0,0,0.3)';
+                                        if (!isLocked) e.currentTarget.style.transform = 'translateY(-2px)';
                                     }}
                                     onMouseLeave={(e) => {
-                                        if (isLocked) return;
-                                        e.currentTarget.style.transform = 'scale(1)';
-                                        e.currentTarget.style.borderColor = borderColor;
-                                        e.currentTarget.style.boxShadow = config.glow ? `0 0 15px ${config.accentColor}, 0 6px 15px rgba(0,0,0,0.3)` : '0 8px 15px rgba(0,0,0,0.2)';
+                                        if (!isLocked) e.currentTarget.style.transform = 'translateY(0)';
                                     }}
                                 >
+                                    {/* Bubble Badge Index Marker */}
                                     <span style={{
-                                        width: isMobile ? '28px' : '50px',
-                                        height: isMobile ? '28px' : '50px',
+                                        width: isMobile ? '30px' : '46px', 
+                                        height: isMobile ? '30px' : '46px',
                                         borderRadius: '50%',
                                         backgroundColor: showResult ? (isCorrect ? '#2e7d32' : isSelected ? '#b71c1c' : '#ccc') : config.accentColor,
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        fontSize: isMobile ? '0.9rem' : '1.3rem',
-                                        color: 'white',
+                                        fontSize: isMobile ? '0.85rem' : '1.25rem',
+                                        color: '#ffffff', 
                                         flexShrink: 0,
                                         fontFamily: '"Riona Sans W04 Black", sans-serif',
-                                        fontWeight: 'normal',
-                                        boxShadow: '0 4px 6px rgba(0,0,0,0.2)'
+                                        opacity: (showResult && !isCorrect && !isSelected) ? 0.6 : 1,
+                                        textShadow: '1px 1px 2px rgba(0,0,0,0.15)',
+                                        boxShadow: '0 3px 6px rgba(0,0,0,0.08)'
                                     }}>
                                         {String.fromCharCode(65 + index)}
                                     </span>
-                                    <div style={{ flex: 1, wordBreak: 'break-word' }}>{option}</div> {/* FIX: Ensures text cleanly wraps inside button spaces */}
+                                    <div style={{ flex: 1, wordBreak: 'break-word', paddingRight: '2px' }}>{option}</div>
                                 </button>
                             );
                         })}
@@ -270,19 +272,13 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             </div>
 
             <style>{`
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                @keyframes shake {
-                    0%, 100% { transform: translateX(0); }
-                    25% { transform: translateX(-10px); }
-                    75% { transform: translateX(10px); }
-                }
-                @keyframes correctPop {
-                    0% { transform: scale(1); }
-                    50% { transform: scale(1.1); }
-                    100% { transform: scale(1.05); }
+                @keyframes wrongNudge {
+                    0% { transform: translateX(0); }
+                    12.5% { transform: translateX(-6px) rotate(-0.5deg); }
+                    37.5% { transform: translateX(5px) rotate(0.5deg); }
+                    62.5% { transform: translateX(-4px) rotate(-0.3deg); }
+                    87.5% { transform: translateX(2px) rotate(0.1deg); }
+                    100% { transform: translateX(0); }
                 }
             `}</style>
         </div>

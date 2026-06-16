@@ -47,3 +47,65 @@ body {
 canvas {
   image-rendering: pixelated;
 }
+/* --- RESPONSIVE LAYOUT SYSTEM --- */
+
+/* 1. Main Quiz Container Wrapper */
+.quiz-container {
+  width: 90%;
+  max-width: 1050px;       /* Keeps it looking perfectly nested like Image 2 */
+  margin: 20px auto;       /* Centers it on any laptop/desktop screen */
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* 2. Responsive Options Grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 equal columns on desktop */
+  align-items: stretch;                  /* ✅ FIX: Forces sibling grid items in the same row to match heights */
+  gap: 24px;                             /* Perfect spacing between options */
+  width: 100%;
+  max-width: 900px;
+  margin-top: 30px;
+}
+
+/* 3. The Option Buttons (A, B, C, D) */
+.option-button {
+  width: 100%;             /* Fills up its grid cell dynamically */
+  height: 100%;            /* ✅ FIX: Forces the button to expand to the full height of the grid track */
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  border-radius: 50px;     /* Gives that smooth pill shape from your design */
+  box-sizing: border-box;
+}
+
+/* --- MOBILE BREAKPOINT (PHONES / MINIMIZED WINDOWS) --- */
+@media (max-width: 768px) {
+  .quiz-container {
+    width: 95%;            /* Utilizes more screen estate on small displays */
+    padding: 12px;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr; /* Stacks A, B, C, D in a single vertical column */
+    gap: 12px;             /* ✅ FIX: Tighter gap helps options fit on screen without overflowing */
+    margin-top: 15px;      /* ✅ FIX: Pulls the grid up slightly to save vertical space */
+  }
+
+  .option-button {
+    height: auto;          /* ✅ FIX: Lets buttons shrink naturally to text size on small viewports */
+    min-height: 60px;      /* ✅ FIX: Keeps it finger-friendly but compact */
+    padding: 10px 16px;    /* ✅ FIX: Reduces padding so text doesn't balloon the container out of bounds */
+    border-radius: 24px;   /* ✅ FIX: Tighter radius looks cleaner as buttons get smaller */
+  }
+  
+  /* If you have a massive question font size, scale it down here */
+  .question-text {
+    font-size: 1.3rem !important; /* ✅ FIX: Scaled down slightly more (from 1.5rem) to protect viewport room */
+    margin-bottom: 15px !important;
+  }
+}

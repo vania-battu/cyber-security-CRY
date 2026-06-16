@@ -18,7 +18,7 @@ import { level5 } from '../levels/level5';
 
 const LandingScreen = ({ onFinishLoading }) => {
     const [progress, setProgress] = useState(0);
-    const [phase, setPhase] = useState('LOADING'); // LOADING, INTRO
+    const [phase, setPhase] = useState('LOADING'); 
 
     useEffect(() => {
         if (phase === 'LOADING') {
@@ -58,7 +58,6 @@ const LandingScreen = ({ onFinishLoading }) => {
                             resolve();
                         };
                         img.onerror = () => {
-                            console.warn(`Failed to preload asset: ${src}`);
                             updateProgress();
                             resolve();
                         };
@@ -74,6 +73,14 @@ const LandingScreen = ({ onFinishLoading }) => {
             loadAssets();
         }
     }, [phase]);
+
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const accentYellow = '#ffd806';
 
@@ -93,7 +100,7 @@ const LandingScreen = ({ onFinishLoading }) => {
             overflow: 'hidden',
             color: 'white'
         }}>
-            {/* Background with blurred friends */}
+            {/* Background with blurred decorative assets */}
             <div style={{
                 position: 'absolute',
                 top: 0,
@@ -102,7 +109,8 @@ const LandingScreen = ({ onFinishLoading }) => {
                 height: '100%',
                 zIndex: 0,
                 overflow: 'hidden',
-                filter: 'blur(15px) brightness(0.5) opacity(0.7)'
+                filter: 'blur(15px) brightness(0.5) opacity(0.7)',
+                pointerEvents: 'none'
             }}>
                 <img src={f1} style={{ position: 'absolute', top: '10%', left: '5%', height: '400px' }} alt="" />
                 <img src={f2} style={{ position: 'absolute', top: '20%', right: '10%', height: '350px' }} alt="" />
@@ -119,64 +127,77 @@ const LandingScreen = ({ onFinishLoading }) => {
                 }} />
             </div>
 
-            {/* Logo */}
-            <div style={{
-                marginTop: '0',
+            {/* Logo Tab */}
+            <div className="landing-logo-tab" style={{
+                position: 'relative',
+                top: '-8px',
                 zIndex: 10,
                 backgroundColor: 'white',
-                padding: '10px 40px',
-                borderRadius: '0 0 30px 30px',
-                boxShadow: '0 5px 15px rgba(0,0,0,0.2)'
+                padding: '12px 24px',
+                borderRadius: '0 0 25px 25px',
+                boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
+                flexShrink: 0,
+                overflow: 'hidden'
             }}>
-                <img src={cryLogo} alt="CRY Logo" style={{ height: '80px', objectFit: 'contain' }} />
+                <img 
+                    src={cryLogo} 
+                    alt="CRY Logo" 
+                    style={{ 
+                        height: isMobile ? '60px' : '84px', 
+                        objectFit: 'contain', 
+                        display: 'block',
+                        transform: 'scale(1.22)',
+                        transformOrigin: 'center top',
+                        marginTop: '4px'
+                    }} 
+                />
             </div>
 
             {/* Main Title Area */}
-            <div style={{
-                marginTop: '10px',
+            <div className="landing-title-wrapper" style={{
+                marginTop: isMobile ? '5px' : '10px',
                 textAlign: 'center',
                 zIndex: 10,
                 display: 'flex',
                 flexDirection: 'column',
-                lineHeight: '0.85'
+                lineHeight: '0.85',
+                flexShrink: 0
             }}>
                 <h1 style={{
-                    fontSize: '6.5rem',
+                    fontSize: isMobile ? '3.8rem' : '6.5rem',
                     color: accentYellow,
                     margin: 0,
                     fontWeight: 'normal',
                     fontFamily: '"Riona Sans W04 Black", sans-serif',
-                    textTransform: 'none',
-                    letterSpacing: '-2px',
+                    letterSpacing: '-1px',
                     textShadow: '4px 4px 15px rgba(0,0,0,0.5)'
                 }}>Cyber</h1>
                 <h1 style={{
-                    fontSize: '6.5rem',
+                    fontSize: isMobile ? '3.8rem' : '6.5rem',
                     color: accentYellow,
                     margin: 0,
                     fontWeight: 'normal',
                     fontFamily: '"Riona Sans W04 Black", sans-serif',
-                    textTransform: 'none',
-                    letterSpacing: '-2px',
+                    letterSpacing: '-1px',
                     textShadow: '4px 4px 15px rgba(0,0,0,0.5)'
                 }}>Champs</h1>
             </div>
 
-            {/* Content Area */}
-            <div style={{
-                marginTop: '20px',
-                width: '80%',
-                maxWidth: '700px',
+            {/* Main Text & Progress Container */}
+            <div className="landing-info-card" style={{
+                marginTop: isMobile ? '12px' : '20px',
+                width: '85%',
+                maxWidth: '750px',
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 zIndex: 30,
-                minHeight: '150px'
+                boxSizing: 'border-box'
             }}>
                 {phase === 'LOADING' ? (
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px' }}>
                         <div style={{
-                            width: '350px',
+                            width: '240px',
                             height: '24px',
                             backgroundColor: 'rgba(255, 153, 0, 0.1)',
                             border: '1.5px solid #FF9900',
@@ -193,7 +214,7 @@ const LandingScreen = ({ onFinishLoading }) => {
                                 transition: 'width 0.1s linear'
                             }} />
                         </div>
-                        <span style={{ marginTop: '12px', color: 'white', fontSize: '1.4rem', fontWeight: '500', opacity: 0.9 }}>loading</span>
+                        <span style={{ marginTop: '12px', color: 'white', fontSize: '1.2rem', fontWeight: '500', opacity: 0.9 }}>loading</span>
                     </div>
                 ) : (
                     <div style={{
@@ -203,22 +224,23 @@ const LandingScreen = ({ onFinishLoading }) => {
                         flexDirection: 'column',
                         alignItems: 'center'
                     }}>
-                        <p style={{ fontSize: '1.4rem', marginBottom: '15px', fontWeight: '500', lineHeight: '1.4', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+                        <p className="landing-desc-p1" style={{ fontSize: isMobile ? '1.1rem' : '1.4rem', marginBottom: '12px', fontWeight: '500', lineHeight: '1.4', textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
                             <strong style={{ color: accentYellow }}>CRY – Child Rights and You</strong> – works to keep every child safe and happy.
                             Come along with <strong style={{ color: accentYellow }}>Priya</strong> on a cyber safety adventure!
                         </p>
-                        <p style={{ fontSize: '1.2rem', marginBottom: '25px', color: 'rgba(255,255,255,0.95)', fontWeight: '400', textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
+                        <p className="landing-desc-p2" style={{ fontSize: isMobile ? '0.95rem' : '1.2rem', marginBottom: '20px', color: 'rgba(255,255,255,0.95)', fontWeight: '400', textShadow: '1px 1px 2px rgba(0,0,0,0.5)' }}>
                             Children, parents, and caring adults — learn, play, and be a <strong style={{ color: accentYellow }}>Cyber Smart Hero</strong> together
                         </p>
+                        
                         <button
                             onClick={onFinishLoading}
                             style={{
-                                padding: '16px 60px',
-                                backgroundColor: '#ffd806', // CRY Yellow
-                                color: 'white',
+                                padding: isMobile ? '12px 45px' : '16px 60px',
+                                backgroundColor: '#ffd806', 
+                                color: '#ffffff',
                                 border: 'none',
                                 borderRadius: '40px',
-                                fontSize: '1.8rem',
+                                fontSize: isMobile ? '1.4rem' : '1.8rem',
                                 fontWeight: 'normal',
                                 fontFamily: '"Riona Sans W04 Black", sans-serif',
                                 cursor: 'pointer',
@@ -227,16 +249,16 @@ const LandingScreen = ({ onFinishLoading }) => {
                                 outline: 'none'
                             }}
                             onMouseEnter={(e) => {
-                                e.target.style.transform = 'scale(1.05) translateY(-2px)';
-                                e.target.style.boxShadow = '0 10px 0 #cc7a00, 0 12px 30px rgba(0,0,0,0.5)';
+                                e.currentTarget.style.transform = 'scale(1.05) translateY(-2px)';
+                                e.currentTarget.style.boxShadow = '0 10px 0 #cc7a00, 0 12px 30px rgba(0,0,0,0.5)';
                             }}
                             onMouseLeave={(e) => {
-                                e.target.style.transform = 'scale(1) translateY(0)';
-                                e.target.style.boxShadow = '0 8px 0 #cc7a00, 0 10px 25px rgba(0,0,0,0.4)';
+                                e.currentTarget.style.transform = 'scale(1) translateY(0)';
+                                e.currentTarget.style.boxShadow = '0 8px 0 #cc7a00, 0 10px 25px rgba(0,0,0,0.4)';
                             }}
                             onMouseDown={(e) => {
-                                e.target.style.transform = 'scale(0.98) translateY(2px)';
-                                e.target.style.boxShadow = '0 2px 0 #cc7a00, 0 4px 10px rgba(0,0,0,0.2)';
+                                e.currentTarget.style.transform = 'scale(0.98) translateY(2px)';
+                                e.currentTarget.style.boxShadow = '0 2px 0 #cc7a00, 0 4px 10px rgba(0,0,0,0.2)';
                             }}
                         >
                             LET'S GO!
@@ -245,49 +267,52 @@ const LandingScreen = ({ onFinishLoading }) => {
                 )}
             </div>
 
-            {/* Main Character Hero Girl (Priya) - Left */}
-            <div style={{
+            {/* Priya character asset block */}
+            <div className="landing-left-character" style={{
                 position: 'absolute',
-                bottom: '10px',
-                left: '20px',
+                bottom: isMobile ? '-10px' : '10px',
+                left: isMobile ? '-25px' : '20px',
                 zIndex: 25,
                 animation: 'slideInLeft 1s cubic-bezier(0.16, 1, 0.3, 1)',
-                filter: 'drop-shadow(5px 5px 15px rgba(0,0,0,0.4))'
+                filter: 'drop-shadow(5px 5px 15px rgba(0,0,0,0.4))',
+                pointerEvents: 'none'
             }}>
-                <img src={heroGirl} alt="Priya" style={{ height: '550px', objectFit: 'contain' }} />
+                <img src={heroGirl} alt="Priya" style={{ height: isMobile ? '230px' : '550px', objectFit: 'contain' }} />
             </div>
 
-            {/* Five Friends - Right */}
-            <div style={{
+            {/* Five friends asset block */}
+            <div className="landing-right-group" style={{
                 position: 'absolute',
-                bottom: '20px',
-                right: '20px',
+                bottom: isMobile ? '5px' : '20px',
+                right: isMobile ? '5px' : '20px',
                 zIndex: 20,
                 display: 'flex',
                 alignItems: 'flex-end',
-                gap: '-25px',
                 animation: 'slideInRight 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                filter: 'drop-shadow(2px 2px 10px rgba(0,0,0,0.3))'
+                filter: 'drop-shadow(2px 2px 10px rgba(0,0,0,0.3))',
+                pointerEvents: 'none'
             }}>
-                <img src={f1} alt="Friend 1" style={{ height: '150px', objectFit: 'contain' }} />
-                <img src={f2} alt="Friend 2" style={{ height: '160px', objectFit: 'contain' }} />
-                <img src={f3} alt="Friend 3" style={{ height: '145px', objectFit: 'contain' }} />
-                <img src={f4} alt="Friend 4" style={{ height: '180px', objectFit: 'contain' }} />
-                <img src={f5} alt="Friend 5" style={{ height: '170px', objectFit: 'contain' }} />
+                {/* ✅ FIXED: Set a slightly higher mobile/tablet height base line layout value so they match the new scale parameters */}
+                <img src={f1} alt="Friend 1" style={{ height: isMobile ? '110px' : '230px', marginRight: '-8px', objectFit: 'contain' }} />
+                <img src={f2} alt="Friend 2" style={{ height: isMobile ? '120px' : '245px', marginRight: '-8px', objectFit: 'contain' }} />
+                <img src={f3} alt="Friend 3" style={{ height: isMobile ? '105px' : '220px', marginRight: '-8px', objectFit: 'contain' }} />
+                <img src={f4} alt="Friend 4" style={{ height: isMobile ? '135px' : '275px', marginRight: '-8px', objectFit: 'contain' }} />
+                <img src={f5} alt="Friend 5" style={{ height: isMobile ? '128px' : '260px', objectFit: 'contain' }} />
             </div>
 
-            {/* Wavy Ground Layer */}
+            {/* Bottom Wavy purple floor strip */}
             <div style={{
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
                 width: '100%',
-                height: '160px',
+                height: isMobile ? '50px' : '160px',
                 backgroundColor: '#3b1d5f',
                 borderRadius: '100% 100% 0 0 / 100% 100% 0 0',
-                transform: 'scaleX(1.15) translateY(40px)',
+                transform: isMobile ? 'scaleX(1.1) translateY(15px)' : 'scaleX(1.15) translateY(40px)',
                 zIndex: 5,
-                boxShadow: '0 -10px 30px rgba(0,0,0,0.3)'
+                boxShadow: '0 -10px 30px rgba(0,0,0,0.3)',
+                pointerEvents: 'none'
             }} />
 
             <style>{`
@@ -303,10 +328,78 @@ const LandingScreen = ({ onFinishLoading }) => {
                     from { transform: translateX(200px); opacity: 0; }
                     to { transform: translateX(0); opacity: 1; }
                 }
+
+                @media (min-width: 769px) and (max-width: 1150px), (max-height: 750px) and (min-width: 769px) {
+                    .landing-title-wrapper {
+                        margin-top: 5px !important;
+                    }
+                    .landing-title-wrapper h1 {
+                        font-size: 4.2rem !important;
+                    }
+                    .landing-info-card {
+                        width: 50% !important;
+                        max-width: 480px !important;
+                        margin-top: 10px !important;
+                    }
+                    .landing-info-card p:first-of-type {
+                        font-size: 1.25rem !important;
+                        line-height: 1.4 !important;
+                        margin-bottom: 10px !important;
+                    }
+                    .landing-info-card p:last-of-type {
+                        font-size: 1.15rem !important;
+                        line-height: 1.3 !important;
+                        margin-bottom: 14px !important;
+                    }
+                    .landing-info-card button {
+                        padding: 12px 45px !important;
+                        font-size: 1.5rem !important;
+                    }
+                    .landing-left-character img {
+                        height: 420px !important;
+                    }
+                    /* ✅ FIXED: Enhanced layout consistency rules on tablet/minimized screen heights */
+                    .landing-right-group img:nth-child(1) { height: 260px !important; }
+                    .landing-right-group img:nth-child(2) { height: 280px !important; }
+                    .landing-right-group img:nth-child(3) { height: 250px !important; }
+                    .landing-right-group img:nth-child(4) { height: 315px !important; }
+                    .landing-right-group img:nth-child(5) { height: 300px !important; }
+                }
+
+                @media (min-width: 1151px) and (min-height: 751px) {
+                    .landing-title-wrapper h1 {
+                        font-size: 9.75rem !important;
+                    }
+                    .landing-logo-tab {
+                        top: -15px !important;
+                    }
+                    .landing-info-card {
+                        width: 95% !important;
+                        max-width: 1400px !important; 
+                    }
+                    .landing-info-card p.landing-desc-p1 {
+                        font-size: 2.8rem !important; 
+                        line-height: 1.4 !important;
+                        margin-bottom: 20px !important;
+                    }
+                    .landing-info-card p.landing-desc-p2 {
+                        font-size: 1.45rem !important; 
+                        line-height: 1.4 !important;
+                        margin-bottom: 25px !important;
+                    }
+                    .landing-left-character img {
+                        height: 620px !important; 
+                    }
+                    /* ✅ FIXED: Dramatically expanded laptop asset dimensions to completely consume the red bounding region box */
+                    .landing-right-group img:nth-child(1) { height: 560px !important; } 
+                    .landing-right-group img:nth-child(2) { height: 600px !important; } 
+                    .landing-right-group img:nth-child(3) { height: 545px !important; } 
+                    .landing-right-group img:nth-child(4) { height: 680px !important; } 
+                    .landing-right-group img:nth-child(5) { height: 640px !important; } 
+                }
             `}</style>
         </div>
     );
 };
 
 export default LandingScreen;
-

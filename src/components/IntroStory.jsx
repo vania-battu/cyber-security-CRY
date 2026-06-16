@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import frame8 from '../assets/frames/Frame 8.png';
 import frame9 from '../assets/frames/Frame 9.png';
@@ -10,18 +10,9 @@ import frame14 from '../assets/frames/Frame 14.png';
 import frame15 from '../assets/frames/Frame 15.png';
 import frame16 from '../assets/frames/Frame 16.png';
 
-import cryLogo from '../assets/Child_Rights_and_You_(CRY)_Organization_logo.png';
-
 const frames = [
-    frame8,
-    frame9,
-    frame10,
-    frame11,
-    frame12,
-    frame13,
-    frame14,
-    frame15,
-    frame16,
+    frame8, frame9, frame10, frame11, frame12,
+    frame13, frame14, frame15, frame16,
 ];
 
 const IntroStory = ({ onComplete }) => {
@@ -39,14 +30,23 @@ const IntroStory = ({ onComplete }) => {
             } else {
                 onComplete();
             }
-        }, 500); // Wait for fade out
+        }, 500);
     };
 
-    // Auto-advance every 5 seconds
     useEffect(() => {
         const timer = setTimeout(handleNext, 5000);
         return () => clearTimeout(timer);
     }, [currentFrame]);
+
+    const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768 || window.innerHeight < 500);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsSmallScreen(window.innerWidth < 768 || window.innerHeight < 500);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <div
@@ -66,9 +66,12 @@ const IntroStory = ({ onComplete }) => {
                 overflow: 'hidden'
             }}
         >
+            {/* FIXED STAGE: Employs a true 16:9 widescreen presentation aspect lock box ratio map */}
             <div style={{
-                width: '100%',
-                height: '100%',
+                width: '100vw',
+                height: '56.25vw', /* 16:9 Aspect Ratio */
+                maxHeight: '100vh',
+                maxWidth: '177.78vh', /* 16:9 Aspect Ratio */
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
@@ -80,34 +83,38 @@ const IntroStory = ({ onComplete }) => {
                     src={frames[currentFrame]}
                     alt={`Story frame ${currentFrame + 8}`}
                     style={{
-                        maxWidth: '100%',
-                        maxHeight: '100%',
-                        objectFit: 'contain'
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover', /* FIXED: Eliminates blank side black gutters entirely */
+                        pointerEvents: 'none'
                     }}
                 />
-
-                {/* Logo Overlay for Final Slide */}
-                {/* Logo Overlay Removed to prevent duplication */}
             </div>
 
-            {/* Click Indicator */}
+            {/* ✅ FIXED: Translucent Frosted Glass style applied to match image_f9484b.jpg */}
             <div style={{
                 position: 'absolute',
-                bottom: '30px',
-                right: '40px',
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                color: 'white',
-                padding: '10px 20px',
-                borderRadius: '20px',
-                fontFamily: '"Riona Sans W01 Regular", sans-serif',
+                bottom: isSmallScreen ? '15px' : '30px', 
+                right: isSmallScreen ? '20px' : '40px',
+                backgroundColor: 'rgba(0, 0, 0, 0.65)', /* Translucent dark wash */
+                backdropFilter: 'blur(8px)', /* Frosting effect */
+                WebkitBackdropFilter: 'blur(8px)', /* Safari support */
+                color: '#ffffff', /* Clean white text fields */
+                padding: isSmallScreen ? '8px 20px' : '10px 24px',
+                borderRadius: '30px',
+                fontFamily: 'sans-serif', /* Compact layout look */
+                fontSize: isSmallScreen ? '12px' : '14px',
+                fontWeight: '600',
+                letterSpacing: '1px', /* Horizontal font tracking spacing */
                 pointerEvents: 'none',
                 opacity: isFading ? 0 : 1,
-                transition: 'opacity 0.3s'
+                zIndex: 510,
+                border: '1px solid rgba(255, 255, 255, 0.15)' /* Subtle light rim */
             }}>
                 {currentFrame === frames.length - 1 ? 'START GAME' : 'NEXT >'}
             </div>
 
-            {/* Skip Button */}
+            {/* ✅ FIXED: Also updated the Skip Button to follow the exact same translucent appearance rules */}
             <button
                 onClick={(e) => {
                     e.stopPropagation();
@@ -115,45 +122,42 @@ const IntroStory = ({ onComplete }) => {
                 }}
                 style={{
                     position: 'absolute',
-                    top: '30px',
-                    right: '30px',
-                    backgroundColor: '#ffd806', // CRY Yellow
-                    backdropFilter: 'blur(5px)',
-                    color: 'black',
-                    border: '1px solid rgba(255,255,255,0.3)',
-                    padding: '8px 24px',
-                    borderRadius: '20px',
-                    fontFamily: '"Riona Sans W01 Regular", sans-serif',
-                    fontSize: '1rem',
-                    fontWeight: 'bold',
+                    top: isSmallScreen ? '15px' : '30px',
+                    right: isSmallScreen ? '20px' : '30px',
+                    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+                    backdropFilter: 'blur(8px)',
+                    WebkitBackdropFilter: 'blur(8px)',
+                    color: '#ffffff',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    padding: isSmallScreen ? '6px 18px' : '8px 22px',
+                    borderRadius: '30px',
+                    fontFamily: 'sans-serif',
+                    fontSize: isSmallScreen ? '11px' : '13px',
+                    fontWeight: '600',
+                    letterSpacing: '0.5px',
                     cursor: 'pointer',
-                    zIndex: 500,
-                    transition: 'all 0.2s'
+                    zIndex: 550,
+                    outline: 'none',
+                    transition: 'all 0.2s ease'
                 }}
-                onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255,255,255,0.2)'}
-                onMouseLeave={(e) => e.target.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.8)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.65)'}
             >
                 SKIP STORY
             </button>
 
-            {/* Auto-play status bar (optional visual cue) */}
+            {/* Progress line indicator */}
             <div style={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                height: '4px',
-                backgroundColor: '#D48A1D',
+                height: '5px',
+                backgroundColor: '#fffdfc',
                 width: '100%',
                 transformOrigin: 'left',
-                animation: !isFading ? 'progress 5s linear forwards' : 'none'
+                animation: !isFading ? 'progress 5s linear forwards' : 'none',
+                zIndex: 520
             }} />
-
-            <style>{`
-                @keyframes progress {
-                    from { transform: scaleX(0); }
-                    to { transform: scaleX(1); }
-                }
-            `}</style>
         </div>
     );
 };

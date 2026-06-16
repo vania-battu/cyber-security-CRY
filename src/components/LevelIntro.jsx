@@ -8,13 +8,13 @@ const LevelIntro = ({ levelIdx, onStartLevel }) => {
         setAnimate(true);
         const timer = setTimeout(() => {
             onStartLevel();
-        }, 8000); // Increased to 8 seconds
+        }, 8000); // 8 seconds countdown loop
         return () => clearTimeout(timer);
     }, [onStartLevel]);
 
     const level = surakshaLevels[levelIdx];
 
-    // Theme colors/names mapping
+    // Theme configurations mapping
     const themes = [
         { color: "#ffd806" }, // L1: Gold
         { color: "#1CB7B8" }, // L2: Cyan/Blue
@@ -26,6 +26,14 @@ const LevelIntro = ({ levelIdx, onStartLevel }) => {
     const currentTheme = themes[levelIdx] || { color: "#fff" };
     const [title, subtitle] = level.title.split('(');
     const cleanSubtitle = subtitle ? subtitle.replace(')', '') : '';
+
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     return (
         <div
@@ -45,19 +53,21 @@ const LevelIntro = ({ levelIdx, onStartLevel }) => {
                 fontFamily: '"Riona Sans W01 Regular", sans-serif',
                 color: 'white',
                 overflow: 'hidden',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                boxSizing: 'border-box',
+                padding: '20px'
             }}
         >
-            {/* Animated Background Circles */}
+            {/* FIXED: Background pulse circle uses viewport constraints to prevent clipping blowouts */}
             <div style={{
                 position: 'absolute',
-                width: '600px',
-                height: '600px',
+                width: isMobile ? '50vw' : '30vw',
+                height: isMobile ? '50vw' : '30vw',
                 borderRadius: '50%',
                 backgroundColor: currentTheme.color,
-                opacity: 0.1,
-                transform: animate ? 'scale(2.5)' : 'scale(0)',
-                transition: 'transform 1.5s ease-out',
+                opacity: 0.08,
+                transform: animate ? 'scale(3.5)' : 'scale(0)',
+                transition: 'transform 2s ease-out',
                 pointerEvents: 'none'
             }} />
 
@@ -70,62 +80,67 @@ const LevelIntro = ({ levelIdx, onStartLevel }) => {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                pointerEvents: 'none'
+                pointerEvents: 'none',
+                width: '100%',
+                maxWidth: '900px'
             }}>
-
+                {/* Main Level Label Display */}
                 <h1 style={{
-                    fontSize: '5.5rem',
+                    fontSize: isMobile ? '2.8rem' : 'calc(3rem + 2.5vw)', /* FIXED: Fluid responsive header calculations */
                     margin: '0',
                     color: currentTheme.color,
                     fontWeight: 'normal',
                     fontFamily: '"Riona Sans W04 Black", sans-serif',
                     textShadow: '0 4px 15px rgba(0,0,0,0.5)',
-                    lineHeight: '1'
+                    lineHeight: '1.1'
                 }}>
                     {title.trim()}
                 </h1>
 
+                {/* Level Title Subheading Description */}
                 <p style={{
-                    fontSize: '2.2rem',
+                    fontSize: isMobile ? '1.2rem' : '1.8rem',
                     color: 'white',
-                    maxWidth: '800px',
-                    margin: '10px auto 40px auto',
-                    lineHeight: '1.2',
+                    width: '100%',
+                    maxWidth: '750px',
+                    margin: isMobile ? '10px auto 25px auto' : '15px auto 35px auto',
+                    lineHeight: '1.3',
                     fontFamily: '"Riona Sans W01 Regular", sans-serif',
-                    opacity: 0.9
+                    opacity: 0.95
                 }}>
                     {cleanSubtitle.trim()}
                 </p>
 
-                {/* FACTS WALA LINE (Guru Tip) */}
+                {/* Security Guru Fact Box Overlay Container */}
                 <div style={{
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                    backdropFilter: 'blur(5px)',
-                    padding: '25px 45px',
-                    borderRadius: '30px',
-                    borderLeft: `12px solid ${currentTheme.color}`,
-                    maxWidth: '850px',
+                    backgroundColor: 'rgba(255,255,255,0.08)',
+                    backdropFilter: 'blur(10px)',
+                    padding: isMobile ? '18px 24px' : '25px 45px',
+                    borderRadius: '24px',
+                    borderLeft: `10px solid ${currentTheme.color}`,
+                    width: '100%',
+                    maxWidth: '800px',
                     margin: '0 auto',
                     textAlign: 'left',
-                    animation: animate ? 'fadeInUp 0.8s ease-out 0.8s forwards' : 'none',
+                    animation: animate ? 'fadeInUp 0.8s ease-out 0.6s forwards' : 'none',
                     opacity: 0,
-                    transform: 'translateY(30px)',
-                    boxShadow: '0 15px 35px rgba(0,0,0,0.3)',
+                    transform: 'translateY(20px)',
+                    boxShadow: '0 15px 35px rgba(0,0,0,0.3)'
                 }}>
                     <span style={{
                         display: 'block',
                         color: currentTheme.color,
                         fontFamily: '"Riona Sans W04 Black", sans-serif',
-                        fontSize: '1.1rem',
-                        letterSpacing: '2px',
-                        marginBottom: '12px',
+                        fontSize: isMobile ? '0.85rem' : '1rem',
+                        letterSpacing: '1.5px',
+                        marginBottom: '8px',
                         textTransform: 'uppercase'
                     }}>
                         Security Guru Fact
                     </span>
                     <p style={{
-                        fontSize: '1.5rem',
-                        lineHeight: '1.5',
+                        fontSize: isMobile ? '1.1rem' : '1.4rem',
+                        lineHeight: '1.4',
                         color: 'white',
                         fontFamily: '"Goodlife W00 Sans Condensed", sans-serif',
                         margin: 0,
@@ -136,35 +151,31 @@ const LevelIntro = ({ levelIdx, onStartLevel }) => {
                 </div>
             </div>
 
-            <style>{`
-                @keyframes fadeInUp {
-                    from { transform: translateY(30px); opacity: 0; }
-                    to { transform: translateY(0); opacity: 1; }
-                }
-            `}</style>
-
-            {/* Click to skip hint */}
+            {/* Click to skip tooltip hint text */}
             <div style={{
                 position: 'absolute',
-                bottom: '30px',
-                right: '40px',
+                bottom: isMobile ? '15px' : '25px',
+                right: isMobile ? '50%' : '40px',
+                transform: isMobile ? 'translateX(50%)' : 'none', /* FIXED: Centers tooltip hint bottom middle on mobile viewports */
                 color: 'rgba(255,255,255,0.4)',
-                fontSize: '0.9rem',
+                fontSize: '0.85rem',
                 fontFamily: '"Riona Sans W01 Regular", sans-serif',
-                animation: 'pulse 2s infinite'
+                animation: 'pulse 2s infinite',
+                whiteSpace: 'nowrap'
             }}>
                 (Click anywhere to skip)
             </div>
 
-            {/* Progress Bar */}
+            {/* FIXED: Time tracking countdown bar changed from 400px to percentage width */}
             <div style={{
                 position: 'absolute',
-                bottom: '10%',
-                width: '400px',
-                height: '6px',
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                borderRadius: '3px',
-                overflow: 'hidden'
+                bottom: '12%',
+                width: isMobile ? '70%' : '350px', 
+                height: '5px',
+                backgroundColor: 'rgba(255,255,255,0.15)',
+                borderRadius: '10px',
+                overflow: 'hidden',
+                pointerEvents: 'none'
             }}>
                 <div style={{
                     height: '100%',
@@ -176,6 +187,10 @@ const LevelIntro = ({ levelIdx, onStartLevel }) => {
             </div>
 
             <style>{`
+                @keyframes fadeInUp {
+                    from { transform: translateY(20px); opacity: 0; }
+                    to { transform: translateY(0); opacity: 1; }
+                }
                 @keyframes pulse {
                     0% { opacity: 0.2; }
                     50% { opacity: 0.5; }
@@ -187,4 +202,3 @@ const LevelIntro = ({ levelIdx, onStartLevel }) => {
 };
 
 export default LevelIntro;
-

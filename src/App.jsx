@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'; 
 import GameCanvas from './components/GameCanvas';
 import StartScreen from './components/StartScreen';
 import LandingScreen from './components/LandingScreen';
@@ -19,11 +19,10 @@ import { surakshaLevels } from './data/surakshaQuestions';
 
 const levels = [level1, level2, level3, level4, level5];
 
-// PASTE YOUR WEB APP URL HERE
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbz1oK5mByUcmvvvlp7qTzvsm0q8PRHfOQyJJcqgAD5G4bDYmBv6a1oNxVKThwdXbSAezg/exec";
 
 function App() {
-  const [gameState, setGameState] = useState('LANDING'); // LANDING, START, STORY, LEVEL_INTRO, PLAYING, QUIZ, GAMEOVER, VICTORY, LEVEL_FAIL
+  const [gameState, setGameState] = useState('LANDING'); 
   const [currentLevelIdx, setCurrentLevelIdx] = useState(0);
   const [lives, setLives] = useState(3);
   const [score, setScore] = useState(0);
@@ -37,8 +36,6 @@ function App() {
   const [lastCorrectCount, setLastCorrectCount] = useState(0);
   const [hasShared, setHasShared] = useState(false);
   const [sessionId, setSessionId] = useState(null);
-
-  /* Removed useEffect for submission to allow manual triggering */
 
   const submitToSheet = (data) => {
     console.log("Submitting:", JSON.stringify(data));
@@ -66,11 +63,9 @@ function App() {
     setQuestionQueue([]);
     setHasShared(false);
 
-    // Generate unique session ID for this game
     const newSessionId = Date.now().toString();
     setSessionId(newSessionId);
 
-    // Record initial player entry
     submitToSheet({
       ...info,
       score: 0,
@@ -83,7 +78,7 @@ function App() {
   const handleLevelFinished = useCallback(() => {
     const questions = surakshaLevels[currentLevelIdx].questions;
     setQuestionQueue([...questions]);
-    setGameState('GURU_TIP'); // New state for Security Guru
+    setGameState('GURU_TIP'); 
     setCorrectCount(0);
   }, [currentLevelIdx]);
 
@@ -91,7 +86,6 @@ function App() {
     const currentQ = questionQueue[0];
     const newCorrectCount = isCorrect ? correctCount + 1 : correctCount;
 
-    // Add to history
     setQuestionHistory(prev => [...prev, {
       question: currentQ.scenario,
       userAnswer: currentQ.options[isCorrect ? currentQ.correctIndex : (currentQ.correctIndex + 1) % currentQ.options.length],
@@ -110,11 +104,9 @@ function App() {
     if (remainingQuestions.length > 0) {
       setQuestionQueue(remainingQuestions);
     } else {
-      // End of level quiz
       if (newCorrectCount >= 3) {
         setGameState('LEVEL_SUCCESS');
       } else {
-        // Did not pass the level quiz
         setGameState('LEVEL_FAIL');
         setLives(prev => Math.max(0, prev - 1));
       }
@@ -130,7 +122,6 @@ function App() {
       setGameState('LEVEL_INTRO');
     } else {
       setGameState('VICTORY');
-      // Submit Finish Data
       if (playerInfo) {
         submitToSheet({
           ...playerInfo,
@@ -149,7 +140,6 @@ function App() {
 
   const handleGameOver = () => {
     setGameState('GAMEOVER');
-    // Submit Data (Finished = False)
     if (playerInfo) {
       submitToSheet({
         ...playerInfo,
@@ -161,48 +151,51 @@ function App() {
     }
   };
 
-const handleShare = async () => {
-  const shareData = {
-    title: "I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.",
-    text: `My score : ${Math.floor(score)} 🏆\n\nCan you do better? Play, learn, and challenge 3 more friends!\n🎮 https://cyber-champ-cry.vercel.app/\n\nFor more on CRY's work for children: https://www.cry.org`,
-    url: 'https://cyber-champ-cry.vercel.app/' 
+  const handleShare = async () => {
+    const formattedText = `I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.\n` +
+                          `My score: ${Math.floor(score)} points 🏆\n` +
+                          `Can you do better? Play, learn, and challenge 3 more friends!\n` +
+                          `🎮 https://cyber-champ-cry.vercel.app/\n` +
+                          `For more on CRY's work for children: www.cry.org`;
+
+    const shareData = {
+      title: "CRY's Cyber Safety Challenge",
+      text: formattedText,
+      url: 'https://cyber-champ-cry.vercel.app/' 
+    };
+
+    try {
+      let sharedSuccessfully = false;
+
+      if (navigator.share) {
+        await navigator.share({
+          title: shareData.title,
+          text: shareData.text
+        });
+        sharedSuccessfully = true; 
+      } else {
+        await navigator.clipboard.writeText(shareData.text);
+        alert("Share details copied to clipboard! Paste it to share with your friends.");
+        sharedSuccessfully = true; 
+      }
+
+      if (sharedSuccessfully && !hasShared) {
+        setHasShared(true);
+        if (playerInfo) {
+          submitToSheet({
+            ...playerInfo,
+            score: Math.floor(score),
+            finished: true,
+            shared: true,
+            sessionId: sessionId
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error sharing:", error);
+    }
   };
 
-  try {
-    let sharedSuccessfully = false;
-
-    if (navigator.share) {
-      await navigator.share(shareData);
-      sharedSuccessfully = true; 
-    } else {
-      
-      const fallbackText = `${shareData.title}\n\n${shareData.text}`;
-      await navigator.clipboard.writeText(fallbackText);
-      alert("📋 Share details copied to clipboard! Paste it to share with your friends.");
-      sharedSuccessfully = true; 
-    }
-
-   
-    if (sharedSuccessfully && !hasShared) {
-      setHasShared(true);
-      
-      // Update Sheet with Shared = True
-      if (playerInfo) {
-        submitToSheet({
-          ...playerInfo,
-          score: Math.floor(score),
-          finished: true,
-          shared: true,
-          sessionId: sessionId
-        });
-      }
-    }
-
-  } catch (error) {
-    
-    console.error("Error sharing:", error);
-  }
-};
   const handleRestart = () => {
     setGameState('LANDING');
     setQuestionHistory([]);
@@ -210,7 +203,6 @@ const handleShare = async () => {
   };
 
   const handleDownloadReport = () => {
-    // Convert logo to base64 for PDF
     const canvas = document.createElement('canvas');
     const img = new Image();
     img.crossOrigin = 'Anonymous';
@@ -232,57 +224,66 @@ const handleShare = async () => {
     setLevelCycle(prev => prev + 1);
   };
 
+  // Check state condition for transparent/faint styling
+  const isFaintScreen = gameState === 'GURU_TIP';
+
   return (
     <div style={{
       width: '100vw',
       height: '100vh',
       backgroundColor: '#333',
       position: 'relative',
-      overflow: 'hidden'
+      overflowX: 'hidden',
+      overflowY: 'auto'
     }}>
-      {/* Global CRY Logo */}
-      {gameState !== 'LANDING' && (
-        <div style={{
+      {/* Global CRY Logo Header */}
+      {/* ✅ FIXED: Completely hides logo for 'LANDING' and 'LEVEL_INTRO', while rendering it faintly on 'GURU_TIP' */}
+      {gameState !== 'LANDING' && gameState !== 'LEVEL_INTRO' && (
+        <div className="global-cry-logo" style={{
           position: 'absolute',
-          top: '20px',
+          top: '-8px', 
           left: '50%',
           transform: 'translateX(-50%)',
-          zIndex: 1000,
+          zIndex: 2001, 
           pointerEvents: 'none',
-          animation: 'fadeIn 1s ease-out',
-          backgroundColor: 'white',
-          padding: '10px 20px',
-          borderRadius: '0 0 20px 20px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+          backgroundColor: isFaintScreen ? 'transparent' : 'white', 
+          padding: '12px 24px',
+          borderRadius: '0 0 25px 25px',
+          boxShadow: isFaintScreen ? 'none' : '0 4px 15px rgba(0,0,0,0.2)', 
+          overflow: 'hidden'
         }}>
-          <img src={cryLogo} alt="CRY Logo" style={{ height: '70px', objectFit: 'contain' }} />
+          <img 
+            src={cryLogo} 
+            alt="CRY Logo" 
+            style={{ 
+              height: '84px', 
+              objectFit: 'contain', 
+              display: 'block',
+              transform: 'scale(1.22)',
+              transformOrigin: 'center top',
+              marginTop: '4px',
+              opacity: isFaintScreen ? 0.12 : 1, 
+              filter: isFaintScreen ? 'brightness(0.6) contrast(1.1)' : 'none' 
+            }} 
+          />
         </div>
       )}
+
       {gameState === 'LANDING' && <LandingScreen onFinishLoading={() => setGameState('START')} />}
       {gameState === 'START' && <StartScreen onStart={handleStart} />}
-
       {gameState === 'STORY' && <IntroStory onComplete={() => setGameState('LEVEL_INTRO')} />}
       {gameState === 'LEVEL_INTRO' && <LevelIntro levelIdx={currentLevelIdx} onStartLevel={handleLevelStart} />}
 
       {(gameState === 'PLAYING' || gameState === 'QUIZ') && (
-        <>
-          {/* HUD hidden as per user request */}
-          {/* <HUD
-            score={score}
-            lives={lives}
-            levelName={level.name}
-            threat={level.threat}
-          /> */}
-          <GameCanvas
-            key={`level-${currentLevelIdx}-${levelCycle}`}
-            level={level}
-            isPaused={gameState === 'QUIZ' || gameState === 'LEVEL_FAIL'}
-            onLevelComplete={handleLevelFinished}
-            lives={lives}
-            onGameOver={handleGameOver}
-            onScoreUpdate={setScore}
-          />
-        </>
+        <GameCanvas
+          key={`level-${currentLevelIdx}-${levelCycle}`}
+          level={level}
+          isPaused={gameState === 'QUIZ' || gameState === 'LEVEL_FAIL'}
+          onLevelComplete={handleLevelFinished}
+          lives={lives}
+          onGameOver={handleGameOver}
+          onScoreUpdate={setScore}
+        />
       )}
 
       {gameState === 'GURU_TIP' && (
@@ -292,58 +293,62 @@ const handleShare = async () => {
         />
       )}
 
+      {/* Renders the Question Panel Quiz using our layout system rules */}
       {gameState === 'QUIZ' && questionQueue.length > 0 && (
-        <QuestionPanel
-          question={questionQueue[0]}
-          onAnswer={handleAnswer}
-          currentQuestionIndex={5 - questionQueue.length + 1}
-          totalQuestions={5}
-          levelIdx={currentLevelIdx}
-        />
+        <div className="quiz-container" style={{ paddingTop: '110px' }}>
+          <QuestionPanel
+            question={questionQueue[0]}
+            onAnswer={handleAnswer}
+            currentQuestionIndex={5 - questionQueue.length + 1}
+            totalQuestions={5}
+            levelIdx={currentLevelIdx}
+          />
+        </div>
       )}
 
       {gameState === 'LEVEL_SUCCESS' && (
-        <LevelSuccess
-          levelIdx={currentLevelIdx}
-          stars={lastCorrectCount}
-          score={score}
-          onNext={handleLevelSuccessNext}
-          onRetry={handleRetryLevel}
-          onExit={handleRestart}
-        />
+        <div className="responsive-modal-panel">
+          <LevelSuccess
+            levelIdx={currentLevelIdx}
+            stars={lastCorrectCount}
+            score={score}
+            onNext={handleLevelSuccessNext}
+            onRetry={handleRetryLevel}
+            onExit={handleRestart}
+          />
+        </div>
       )}
 
+      {/* RESPONSIVE LEVEL FAIL MODAL */}
       {gameState === 'LEVEL_FAIL' && (
-        <div style={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+        <div className="responsive-modal-panel" style={{
+          position: 'absolute', top: 0, left: 0, width: '100%', minHeight: '100%',
           backgroundColor: '#E4296B', color: '#fff',
           display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          zIndex: 500, fontFamily: '"Riona Sans W01 Regular", sans-serif', textAlign: 'center'
+          zIndex: 500, fontFamily: '"Riona Sans W01 Regular", sans-serif', textAlign: 'center',
+          padding: '110px 20px 20px 20px', boxSizing: 'border-box'
         }}>
-          <h1 style={{ fontSize: '4.5rem', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', marginBottom: '20px' }}>DON'T GIVE UP!</h1>
-          <p style={{ fontSize: '1.8rem', marginBottom: '40px', maxWidth: '600px', lineHeight: '1.4' }}>
+          <h1 className="question-text" style={{ fontSize: 'calc(2rem + 2vw)', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', marginBottom: '20px' }}>DON'T GIVE UP!</h1>
+          <p style={{ fontSize: 'calc(1rem + 0.5vw)', marginBottom: '40px', maxWidth: '600px', lineHeight: '1.4' }}>
             That was a tough one, but every Hero learns from their mistakes. <br />
             <b>Let's try again!</b>
           </p>
 
-          <div style={{ display: 'flex', gap: '20px' }}>
+          <div style={{ display: 'flex', gap: '20px', width: '100%', maxWidth: '400px', justifyContent: 'center' }}>
             <button
               onClick={handleRetryLevel}
               style={{
-                padding: '20px 60px',
-                fontSize: '1.5rem',
+                width: '100%',
+                padding: '15px 30px',
+                fontSize: '1.3rem',
                 cursor: 'pointer',
                 borderRadius: '50px',
                 border: 'none',
-                fontWeight: 'normal',
                 fontFamily: '"Riona Sans W04 Black", sans-serif',
                 backgroundColor: '#ffd806',
                 color: 'black',
-                boxShadow: '0 8px 0 #6B8E2D, 0 10px 20px rgba(0,0,0,0.3)',
-                transition: 'transform 0.1s'
+                boxShadow: '0 6px 0 #6B8E2D, 0 10px 20px rgba(0,0,0,0.3)'
               }}
-              onMouseDown={(e) => e.target.style.transform = 'translateY(4px)'}
-              onMouseUp={(e) => e.target.style.transform = 'translateY(0)'}
             >
               RETRY LEVEL
             </button>
@@ -351,74 +356,202 @@ const handleShare = async () => {
         </div>
       )}
 
+      {/* RESPONSIVE GAMEOVER MODAL */}
       {gameState === 'GAMEOVER' && (
-        <div style={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+        <div className="responsive-modal-panel" style={{
+          position: 'absolute', top: 0, left: 0, width: '100%', minHeight: '100%',
           backgroundColor: '#E4296B', color: '#fff',
           display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
-          zIndex: 300, fontFamily: '"Riona Sans W01 Regular", sans-serif', textAlign: 'center'
+          zIndex: 300, fontFamily: '"Riona Sans W01 Regular", sans-serif', textAlign: 'center',
+          padding: '120px 20px 20px 20px', boxSizing: 'border-box'
         }}>
-          <h1 style={{ fontSize: '4rem', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ff4444' }}>MISSION FAILED</h1>
-          <p style={{ fontSize: '1.8rem', marginBottom: '10px' }}>Don't give up, {playerInfo?.name}!</p>
+          <h1 style={{ fontSize: 'calc(2rem + 2vw)', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ff4444', marginBottom: '10px' }}>MISSION FAILED</h1>
+          <p style={{ fontSize: '1.4rem', marginBottom: '20px' }}>Don't give up, {playerInfo?.name}!</p>
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.1)',
-            padding: '20px 40px',
+            padding: '20px',
             borderRadius: '20px',
             marginBottom: '30px',
+            width: '100%',
+            maxWidth: '500px',
             border: '2px solid rgba(255,255,255,0.2)'
           }}>
-            <p style={{ fontSize: '1.4rem' }}>You got <b>{questionHistory.filter(h => h.isCorrect).length}</b> safety questions right!</p>
-            <p style={{ fontSize: '1.2rem', opacity: 0.8 }}>Score: {Math.floor(score)}</p>
+            <p style={{ fontSize: '1.2rem' }}>You got <b>{questionHistory.filter(h => h.isCorrect).length}</b> safety questions right!</p>
+            <p style={{ fontSize: '1.1rem', opacity: 0.8, marginTop: '5px' }}>Score: {Math.floor(score)}</p>
           </div>
-          <div style={{ display: 'flex', gap: '20px' }}>
-            <button onClick={handleRestart} style={{ padding: '15px 40px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
+          <div style={{ display: 'flex', gap: '15px', flexDirection: 'column', width: '100%', maxWidth: '400px' }}>
+            <button onClick={handleRestart} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               RETRY MISSION
             </button>
-            <button onClick={handleDownloadReport} style={{ padding: '15px 40px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
+            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
               GET SAFETY REPORT
             </button>
           </div>
         </div>
       )}
 
+      {/* RESPONSIVE VICTORY MODAL */}
       {gameState === 'VICTORY' && (
-        <div style={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+        <div className="victory-modal-container" style={{
+          position: 'absolute', top: 0, left: 0, width: '100%', minHeight: '100%',
           backgroundColor: '#E4296B', color: '#fff',
           display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
           zIndex: 300, fontFamily: '"Riona Sans W01 Regular", sans-serif', textAlign: 'center',
-          paddingTop: '100px'
+          padding: '80px 20px 20px 20px', boxSizing: 'border-box'
         }}>
-          <h1 style={{ fontSize: '4.5rem', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', textShadow: '0 4px 20px rgba(140,182,61,0.4)' }}>CYBER CHAMPION!</h1>
-          <p style={{ fontSize: '1.8rem', marginBottom: '10px' }}>Outstanding work, {playerInfo?.name}!</p>
+          {/* Inline structural wrapper for Mobile Logo layout tracking */}
+          <div className="victory-mobile-logo-spacer" style={{ display: 'none', width: '100%', justifyContent: 'center', marginBottom: '15px' }}>
+             <div style={{ backgroundColor: 'white', padding: '12px 24px', borderRadius: '0 0 25px 25px', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', overflow: 'hidden', marginTop: '-8px' }}>
+                <img 
+                  src={cryLogo} 
+                  alt="CRY Logo" 
+                  style={{ 
+                    height: '64px', 
+                    objectFit: 'contain',
+                    transform: 'scale(1.22)',
+                    transformOrigin: 'center top',
+                    marginTop: '4px'
+                  }} 
+                />
+             </div>
+          </div>
+
+          <h1 className="victory-title-heading" style={{ fontSize: 'calc(2.2rem + 2vw)', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', marginBottom: '10px' }}>CYBER CHAMPION!</h1>
+          <p style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Outstanding work, {playerInfo?.name}!</p>
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.1)',
-            padding: '25px 50px',
+            padding: '20px',
             borderRadius: '25px',
-            marginBottom: '40px',
+            marginBottom: '30px',
+            width: '100%',
+            maxWidth: '500px',
             border: '2px solid #8CB63D'
           }}>
-            <p style={{ fontSize: '1.5rem' }}>Final Score: <b>{Math.floor(score)}</b></p>
-            <p style={{ fontSize: '1.3rem' }}>Safety Master: <b>{questionHistory.filter(h => h.isCorrect).length}/{questionHistory.length}</b> Correct</p>
+            <p style={{ fontSize: '1.3rem' }}>Final Score: <b>{Math.floor(score)}</b></p>
+            <p style={{ fontSize: '1.1rem', marginTop: '5px' }}>Safety Master: <b>{questionHistory.filter(h => h.isCorrect).length}/{questionHistory.length}</b> Correct</p>
           </div>
-          <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center', maxWidth: '800px' }}>
-            <button onClick={handleShare} style={{ padding: '18px 40px', fontSize: '1.3rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div className="victory-buttons-group" style={{ display: 'flex', gap: '15px', flexDirection: 'column', width: '100%', maxWidth: '400px' }}>
+            <button onClick={handleShare} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
               <span>SHARE THIS GAME- READY LINK</span>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.66 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" /></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.66 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" /></svg>
             </button>
-            <button onClick={handleDownloadReport} style={{ padding: '18px 40px', fontSize: '1.3rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
+            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
               DOWNLOAD PERFORMANCE CARD
             </button>
-            <button onClick={handleRestart} style={{ padding: '18px 40px', fontSize: '1.3rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
+            <button onClick={handleRestart} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               PLAY AGAIN
             </button>
           </div>
-          <div style={{ marginTop: '40px', opacity: 0.8, textAlign: 'center' }}>
-            <p style={{ margin: '5px 0' }}>Remember: Use Technology responsibly and stay safe!</p>
-            <p style={{ margin: '5px 0', fontSize: '0.9rem' }}>© CRY - Child Rights and You</p>
+          <div className="victory-footer-text" style={{ marginTop: '30px', opacity: 0.8, paddingBottom: '30px' }}>
+            <p style={{ fontSize: '1rem', margin: '5px 0' }}>Remember: Use Technology responsibly and stay safe!</p>
+            <p style={{ margin: '5px 0', fontSize: '0.8rem' }}>© CRY - Child Rights and You</p>
           </div>
         </div>
       )}
+
+      {/* Responsive layout configuration rules inside global styled sheet layout context */}
+      <style>{`
+        /* --- ALL MOBILE/PHONE SCREENS --- */
+        @media (max-width: 768px) {
+          .global-cry-logo {
+            display: block !important;
+            top: -8px !important;
+            padding: 8px 16px !important;
+            border-radius: 0 0 18px 18px !important;
+          }
+          .global-cry-logo img {
+            height: 60px !important;
+            transform: scale(1.22) !important;
+            transform-origin: center top !important;
+            margin-top: 4px !important;
+          }
+          
+          .victory-modal-container .global-cry-logo {
+            display: none !important; 
+          }
+          
+          .victory-title-heading {
+            font-size: 1.8rem !important;
+            white-space: nowrap !important;
+            letter-spacing: 0.5px !important;
+            margin-top: 5px !important;
+            margin-bottom: 5px !important;
+          }
+          
+          .victory-modal-container {
+            position: relative !important;
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            min-height: 100vh !important;
+            overflow-y: auto !important;
+            padding: 0px 16px 40px 16px !important;
+          }
+          
+          .responsive-modal-panel {
+            padding-top: 105px !important; 
+          }
+          
+          .victory-mobile-logo-spacer {
+            display: flex !important;
+          }
+          
+          .victory-buttons-group {
+            margin: 0 auto 25px auto !important;
+          }
+          
+          .victory-footer-text {
+            margin-top: 15px !important;
+            padding-bottom: 35px !important;
+            display: block !important;
+          }
+        }
+        
+        /* --- LAPTOP, TABLET & MINIMIZED DESKTOP VIEWS --- */
+        @media (min-width: 769px) {
+          .global-cry-logo {
+            display: block !important;
+            position: absolute !important;
+          }
+          .victory-modal-container {
+            justify-content: center !important;
+            padding-top: 130px !important; 
+          }
+          .responsive-modal-panel {
+            padding-top: 140px !important;
+          }
+        }
+        
+        /* --- COMPRESSED BREAKPOINTS --- */
+        @media (min-width: 769px) and (max-width: 1150px), (max-height: 750px) and (min-width: 769px) {
+          .victory-modal-container {
+            justify-content: flex-start !important;
+            padding-top: 120px !important;
+            overflow-y: auto !important;
+          }
+          .responsive-modal-panel {
+            justify-content: flex-start !important;
+            padding-top: 130px !important;
+            overflow-y: auto !important;
+          }
+          .victory-title-heading {
+            font-size: 2.8rem !important;
+          }
+          .victory-modal-container p {
+            margin-bottom: 10px !important;
+          }
+          .victory-modal-container div {
+            margin-bottom: 15px !important;
+          }
+        }
+
+        @media (max-height: 700px) and (min-width: 769px) {
+          .victory-modal-container {
+            justify-content: flex-start !important;
+            padding-top: 115px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
