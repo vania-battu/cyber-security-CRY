@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'; 
+import React, { useState, useEffect, useCallback, useRef } from 'react'; 
 import GameCanvas from './components/GameCanvas';
 import StartScreen from './components/StartScreen';
 import LandingScreen from './components/LandingScreen';
@@ -16,6 +16,10 @@ import { level3 } from './levels/level3';
 import { level4 } from './levels/level4';
 import { level5 } from './levels/level5';
 import { surakshaLevels } from './data/surakshaQuestions';
+
+// Visual and Audio Asset Imports
+import quizMusicAsset from './assets/audio/final_click.mp3';
+import globalBgmAsset from './assets/audio/final_bgm.mp3';
 
 const levels = [level1, level2, level3, level4, level5];
 
@@ -36,6 +40,71 @@ function App() {
   const [lastCorrectCount, setLastCorrectCount] = useState(0);
   const [hasShared, setHasShared] = useState(false);
   const [sessionId, setSessionId] = useState(null);
+
+  // Audio Controller Instances Tracker
+  const quizAudioRef = useRef(null);
+  const globalBgmRef = useRef(null);
+
+  // Initialize both Audio tracks securely once on mount
+  useEffect(() => {
+    // 1. Setup Quiz Audio
+    const quizAudio = new Audio(quizMusicAsset);
+    quizAudio.loop = true;
+    quizAudio.volume = 0.4;
+    quizAudioRef.current = quizAudio;
+
+    // 2. Setup Global Background Music
+    const globalBgm = new Audio(globalBgmAsset);
+    globalBgm.loop = true; 
+    globalBgm.volume = 0.35; 
+    globalBgmRef.current = globalBgm;
+
+    // ✅ FIXED: Global listener to instantly kick-start the music on the landing page at first interaction
+    const startBgmOnInteraction = () => {
+      if (globalBgmRef.current && gameState !== 'GURU_TIP' && gameState !== 'QUIZ') {
+        globalBgmRef.current.play().then(() => {
+          // Clean up listeners once successfully playing
+          window.removeEventListener('click', startBgmOnInteraction);
+          window.removeEventListener('touchstart', startBgmOnInteraction);
+        }).catch(err => console.log("BGM playback update waiting on gesture:", err));
+      }
+    };
+
+    window.addEventListener('click', startBgmOnInteraction);
+    window.addEventListener('touchstart', startBgmOnInteraction);
+
+    return () => {
+      if (quizAudioRef.current) quizAudioRef.current.pause();
+      if (globalBgmRef.current) globalBgmRef.current.pause();
+      window.removeEventListener('click', startBgmOnInteraction);
+      window.removeEventListener('touchstart', startBgmOnInteraction);
+    };
+  }, []);
+
+  // Master Audio Lifecycle System Manager
+  useEffect(() => {
+    if (!quizAudioRef.current || !globalBgmRef.current) return;
+
+    const isQuizPhase = gameState === 'GURU_TIP' || gameState === 'QUIZ';
+
+    if (isQuizPhase) {
+      globalBgmRef.current.pause();
+
+      if (quizAudioRef.current.paused) {
+        quizAudioRef.current.currentTime = 0;
+      }
+      quizAudioRef.current.play().catch(err => {
+        console.log("Quiz audio waiting for a user gesture to fire safely:", err);
+      });
+    } else {
+      quizAudioRef.current.pause();
+
+      // ✅ FIXED: Ensures seamless playback continuation across all pages, including landing/login loops
+      globalBgmRef.current.play().catch(err => {
+        console.log("Global BGM auto-resume deferred until layout interaction:", err);
+      });
+    }
+  }, [gameState]);
 
   const submitToSheet = (data) => {
     console.log("Submitting:", JSON.stringify(data));
@@ -224,7 +293,6 @@ function App() {
     setLevelCycle(prev => prev + 1);
   };
 
-  // Check state condition for transparent/faint styling
   const isFaintScreen = gameState === 'GURU_TIP';
 
   return (
@@ -237,7 +305,6 @@ function App() {
       overflowY: 'auto'
     }}>
       {/* Global CRY Logo Header */}
-      {/* ✅ FIXED: Completely hides logo for 'LANDING' and 'LEVEL_INTRO', while rendering it faintly on 'GURU_TIP' */}
       {gameState !== 'LANDING' && gameState !== 'LEVEL_INTRO' && (
         <div className="global-cry-logo" style={{
           position: 'absolute',
