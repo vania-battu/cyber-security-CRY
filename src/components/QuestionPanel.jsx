@@ -44,7 +44,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             case 3:
                 return { 
                     frame: frameBlue, 
-                    textColor: '#1c110f', // ✅ FIXED: Changed to deep dark brown/black for case 3
+                    textColor: '#1c110f', 
                     accentColor: '#6B2F67', 
                     buttonBg: 'rgba(0, 0, 0, 0.75)', 
                     buttonBorder: '#6B2F67', 
@@ -87,7 +87,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             top: 0,
             left: 0,
             width: '100%',
-            height: '100%',
+            minHeight: '100vh',
             backgroundColor: config.pageBg, 
             display: 'flex',
             flexDirection: 'column',
@@ -99,15 +99,15 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             fontFamily: '"Riona Sans W01 Regular", sans-serif',
             boxSizing: 'border-box'
         }}>
-            {/* Background Frame Layer */}
+            {/* Background Frame Layer - Changed position to fixed to prevent crashing during scroll */}
             <div style={{
-                position: 'absolute',
+                position: 'fixed',
                 top: 0,
                 left: 0,
-                width: '100%',
-                height: '100%',
+                width: '100vw',
+                height: '100vh',
                 backgroundImage: `url("${config.frame}")`,
-                backgroundSize: 'cover',
+                backgroundSize: '100% 100%',
                 backgroundPosition: 'center center',
                 backgroundRepeat: 'no-repeat',
                 filter: config.filter,
@@ -123,11 +123,11 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                 maxWidth: isMobile ? '100%' : '1240px', 
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'flex-start',
+                justifyContent: 'center',
                 alignItems: 'center',
-                padding: isMobile ? '115px 16px 25px 16px' : (isTablet ? '145px 45px 40px 45px' : '155px 40px 30px 40px'), 
+                padding: isMobile ? '115px 16px 25px 16px' : (isTablet ? '130px 45px 40px 45px' : '140px 60px 40px 60px'), 
                 boxSizing: 'border-box',
-                minHeight: '100%'
+                minHeight: '100vh'
             }}>
                 
                 {/* Progress Tracker Label */}
@@ -150,23 +150,22 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                     
                     <div style={{
                         width: '100%',
-                        height: isMobile ? 'auto' : '110px', 
+                        height: 'auto', 
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        marginTop: isMobile ? '5px' : '20px', 
-                        marginBottom: isMobile ? '15px' : '45px',
+                        marginTop: isMobile ? '5px' : '10px', 
+                        marginBottom: isMobile ? '15px' : '35px',
                         boxSizing: 'border-box'
                     }}>
                         {/* Main Scenario Heading */}
                         <h2 className="question-text" style={{
-                            fontSize: isMobile ? '1.12rem' : (isTablet ? '1.85rem' : '2.45rem'), 
+                            fontSize: isMobile ? '1.12rem' : (isTablet ? '1.75rem' : '2.2rem'), 
                             margin: 0,
                             fontWeight: 'normal',
                             fontFamily: '"Riona Sans W04 Black", sans-serif',
                             lineHeight: '1.35',
                             color: config.textColor,
-                            // ✅ FIXED: Removes white text blur shadow for case 3 to keep text crisp and clear
                             textShadow: levelIdx === 3 ? 'none' : ((levelIdx === 0 || levelIdx === 1) ? '0 1px 2px rgba(0,0,0,0.02)' : '2px 3px 6px rgba(0,0,0,0.6)'),
                             padding: isMobile ? '0 5px' : '0 50px',
                             wordBreak: 'break-word',
@@ -180,7 +179,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                     <div className="options-grid" style={{ 
                         display: 'grid',
                         gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', 
-                        gap: isMobile ? '12px' : (isTablet ? '24px 30px' : '36px 48px'), 
+                        gap: isMobile ? '12px' : (isTablet ? '20px 24px' : '24px 32px'), 
                         width: '100%',
                         maxWidth: '1160px', 
                         margin: '0 auto',
@@ -194,8 +193,6 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
 
                             let bgColor = config.buttonBg;
                             let borderColor = config.buttonBorder;
-                            
-                            // Options button text configuration remains exactly the same
                             let innerTextColor = (levelIdx === 0 || levelIdx === 1) ? config.textColor : '#ffffff';
 
                             if (showResult) {
@@ -216,11 +213,11 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                                     onClick={() => handleOptionClick(index)}
                                     disabled={isLocked}
                                     style={{
-                                        fontSize: isMobile ? '0.88rem' : '1.25rem', 
+                                        fontSize: isMobile ? '0.88rem' : (isTablet ? '1.1rem' : '1.2rem'), 
                                         backgroundColor: bgColor,
                                         border: `2px solid ${borderColor}`, 
                                         borderRadius: '60px', 
-                                        padding: isMobile ? '12px 18px' : '28px 45px', 
+                                        padding: isMobile ? '12px 18px' : '20px 35px', 
                                         cursor: isLocked ? 'default' : 'pointer',
                                         transition: 'background-color 0.15s, border-color 0.15s, color 0.15s, transform 0.1s ease',
                                         fontWeight: '700', 
@@ -228,11 +225,11 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                                         textAlign: 'left',
                                         display: 'flex',
                                         alignItems: 'center',
-                                        gap: isMobile ? '10px' : '24px', 
+                                        gap: isMobile ? '10px' : '20px', 
                                         boxShadow: (levelIdx === 0 || levelIdx === 1) ? '0 8px 20px rgba(0,0,0,0.06)' : '0 8px 16px rgba(0,0,0,0.35)', 
                                         width: '100%',
                                         height: 'auto', 
-                                        minHeight: isMobile ? 'auto' : '110px', 
+                                        minHeight: isMobile ? 'auto' : '90px', 
                                         boxSizing: 'border-box',
                                         lineHeight: isMobile ? '1.35' : '1.45',
                                         animation: shouldShake ? 'wrongNudge 0.4s ease-in-out' : 'none'
@@ -246,14 +243,14 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                                 >
                                     {/* Bubble Badge Index Marker */}
                                     <span style={{
-                                        width: isMobile ? '30px' : '46px', 
-                                        height: isMobile ? '30px' : '46px',
+                                        width: isMobile ? '30px' : '40px', 
+                                        height: isMobile ? '30px' : '40px',
                                         borderRadius: '50%',
                                         backgroundColor: showResult ? (isCorrect ? '#2e7d32' : isSelected ? '#b71c1c' : '#ccc') : config.accentColor,
                                         display: 'flex',
                                         justifyContent: 'center',
                                         alignItems: 'center',
-                                        fontSize: isMobile ? '0.85rem' : '1.25rem',
+                                        fontSize: isMobile ? '0.85rem' : '1.15rem',
                                         color: '#ffffff', 
                                         flexShrink: 0,
                                         fontFamily: '"Riona Sans W04 Black", sans-serif',
