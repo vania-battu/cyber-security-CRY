@@ -99,7 +99,7 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
             fontFamily: '"Riona Sans W01 Regular", sans-serif',
             boxSizing: 'border-box'
         }}>
-            {/* Background Frame Layer - Changed position to fixed to prevent crashing during scroll */}
+            {/* Background Frame Layer - Dynamic sizing applied here for mobile view config */}
             <div style={{
                 position: 'fixed',
                 top: 0,
@@ -107,8 +107,8 @@ const QuestionPanel = ({ question, onAnswer, currentQuestionIndex, totalQuestion
                 width: '100vw',
                 height: '100vh',
                 backgroundImage: `url("${config.frame}")`,
-                backgroundSize: '100% 100%',
-                backgroundPosition: 'center center',
+                backgroundSize: isMobile ? 'auto 100%' : '100% 100%',
+                backgroundPosition: isMobile ? 'center top' : 'center center',
                 backgroundRepeat: 'no-repeat',
                 filter: config.filter,
                 zIndex: 1,
