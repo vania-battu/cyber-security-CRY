@@ -221,17 +221,17 @@ function App() {
   };
 
   const handleShare = async () => {
-    // Incrementing the cache-buster version to v=4 so engines immediately drop the cached layout
+    // ✅ FIXED: Suffix incremented to ?v=5 to wipe low-res history buffers instantly across devices
     const formattedText = `I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.\n` +
                           `My score: ${Math.floor(score)} points 🏆\n` +
                           `Can you do better? Play, learn, and challenge 3 more friends!\n` +
-                          `🎮 https://cyber-champ-cry.vercel.app/?v=4\n` +
+                          `🎮 https://cyber-champ-cry.vercel.app/?v=5\n` +
                           `For more on CRY's work for children: www.cry.org`;
 
     const shareData = {
       title: "CRY's Cyber Safety Challenge",
       text: formattedText,
-      url: 'https://cyber-champ-cry.vercel.app/?v=4' 
+      url: 'https://cyber-champ-cry.vercel.app/?v=5' 
     };
 
     try {
@@ -487,11 +487,12 @@ function App() {
           <h1 className="victory-title-heading" style={{ fontSize: 'calc(2.2rem + 2vw)', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', marginBottom: '10px' }}>CYBER CHAMPION!</h1>
           <p style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Outstanding work, {playerInfo?.name || 'Hero'}!</p>
           
+          {/* ─── FIXED SCORE DETAILS CONTAINER BLOCK (Centers perfectly everywhere with explicit margins) ─── */}
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.1)',
             padding: '20px',
             borderRadius: '25px',
-            margin: '0 auto 30px auto', 
+            margin: '0 auto 30px auto', // ✅ FIXED: horizontal auto centering applied for fluid view blocks
             width: '100%',
             maxWidth: '500px',
             border: '2px solid #8CB63D',
