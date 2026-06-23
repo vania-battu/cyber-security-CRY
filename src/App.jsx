@@ -23,7 +23,7 @@ import globalBgmAsset from './assets/audio/final_bgm.mp3';
 
 const levels = [level1, level2, level3, level4, level5];
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbz1oK5mByUcmvvvlp7qTzvsm0q8PRHfOQyJJcqgAD5G4bDYmBv6a1oNxVKThwdXbSAezg/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbxzW2Ka-ZllIgEYZYOvP3GnYJh8xzYgM852a6ItUMdNTHwFfv08vlM9OXcyqI0DnyVfBA/exec";
 
 function App() {
   const [gameState, setGameState] = useState('LANDING'); 
@@ -221,16 +221,17 @@ function App() {
   };
 
   const handleShare = async () => {
+    // ✅ FIXED: Added ?v=3 to force platforms to fetch fresh social_preview.png images instantly
     const formattedText = `I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.\n` +
                           `My score: ${Math.floor(score)} points 🏆\n` +
                           `Can you do better? Play, learn, and challenge 3 more friends!\n` +
-                          `🎮 https://cyber-champ-cry.vercel.app/\n` +
+                          `🎮 https://cyber-champ-cry.vercel.app/?v=3\n` +
                           `For more on CRY's work for children: www.cry.org`;
 
     const shareData = {
       title: "CRY's Cyber Safety Challenge",
       text: formattedText,
-      url: 'https://cyber-champ-cry.vercel.app/' 
+      url: 'https://cyber-champ-cry.vercel.app/?v=3' 
     };
 
     try {
@@ -484,19 +485,32 @@ function App() {
           </div>
 
           <h1 className="victory-title-heading" style={{ fontSize: 'calc(2.2rem + 2vw)', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', marginBottom: '10px' }}>CYBER CHAMPION!</h1>
-          <p style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Outstanding work, {playerInfo?.name}!</p>
+          <p style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Outstanding work, {playerInfo?.name || 'Hero'}!</p>
+          
+          {/* ─── FIXED SCORE DETAILS CONTAINER BLOCK (Centers perfectly everywhere with explicit margins) ─── */}
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.1)',
             padding: '20px',
             borderRadius: '25px',
-            marginBottom: '30px',
+            margin: '0 auto 30px auto', // ✅ FIXED: margin auto forces block alignment layout centering
             width: '100%',
             maxWidth: '500px',
-            border: '2px solid #8CB63D'
+            border: '2px solid #8CB63D',
+            boxSizing: 'border-box',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px'
           }}>
-            <p style={{ fontSize: '1.3rem' }}>Final Score: <b>{Math.floor(score)}</b></p>
-            <p style={{ fontSize: '1.1rem', marginTop: '5px' }}>Safety Master: <b>{questionHistory.filter(h => h.isCorrect).length}/{questionHistory.length}</b> Correct</p>
+            <p style={{ fontSize: '1.3rem', margin: 0, width: '100%', textAlign: 'center' }}>
+              Final Score: <b>{Math.floor(score)}</b>
+            </p>
+            <p style={{ fontSize: '1.1rem', margin: 0, width: '100%', textAlign: 'center' }}>
+              Safety Master: <b>{questionHistory.filter(h => h.isCorrect).length}/{questionHistory.length}</b> Correct
+            </p>
           </div>
+
           <div className="victory-buttons-group" style={{ display: 'flex', gap: '15px', flexDirection: 'column', width: '100%', maxWidth: '400px' }}>
             <button onClick={handleShare} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
               <span>SHARE THIS GAME- READY LINK</span>

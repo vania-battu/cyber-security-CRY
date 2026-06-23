@@ -161,6 +161,9 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         gameRef.current.distanceTraveled += speed;
         gameRef.current.player.update();
 
+        // ✅ BALANCED RUNTIME FIX: Set Level 1 to 2 loops instead of 3 to shorten its duration slightly
+        const targetLoops = (level.title === "Level 1" || level.id === 1) ? 2 : 3;
+
         gameRef.current.backgrounds.forEach(bg => {
             const aspect = bg.img.naturalWidth / bg.img.naturalHeight || 1;
             const bgWidth = Math.max(canvas.width, canvas.height * aspect);
@@ -174,7 +177,7 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
                 bg.x = 0;
                 if (bg.speedModifier === 1.0) {
                     gameRef.current.loopsCompleted += 1;
-                    if (gameRef.current.loopsCompleted >= 3) {
+                    if (gameRef.current.loopsCompleted >= targetLoops) {
                         gameRef.current.isLevelFinishing = true;
                         if (gameRef.current.player) gameRef.current.player.setStill(true);
                         timeoutRef.current = setTimeout(onLevelComplete, 2000);
@@ -222,7 +225,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
             const floatOffset = Math.sin(Date.now() / 350) * 15;
 
             const rightPadding = isCompressed ? canvasWidth * 0.04 : canvasWidth * 0.08;
-            // Kept the antagonist aligned beautifully on his side baseline coordinates
             const calculatedY = canvasHeight - GROUND_OFFSET_Y - antHeight + floatOffset + (isCompressed ? 45 : 65);
 
             ctx.drawImage(
