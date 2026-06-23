@@ -59,7 +59,7 @@ function App() {
     globalBgm.volume = 0.35; 
     globalBgmRef.current = globalBgm;
 
-    // ✅ FIXED: Global listener to instantly kick-start the music on the landing page at first interaction
+    // Global listener to instantly kick-start the music on the landing page at first interaction
     const startBgmOnInteraction = () => {
       if (globalBgmRef.current && gameState !== 'GURU_TIP' && gameState !== 'QUIZ') {
         globalBgmRef.current.play().then(() => {
@@ -99,7 +99,7 @@ function App() {
     } else {
       quizAudioRef.current.pause();
 
-      // ✅ FIXED: Ensures seamless playback continuation across all pages, including landing/login loops
+      // Ensures seamless playback continuation across all pages, including landing/login loops
       globalBgmRef.current.play().catch(err => {
         console.log("Global BGM auto-resume deferred until layout interaction:", err);
       });
@@ -221,30 +221,27 @@ function App() {
   };
 
   const handleShare = async () => {
-    // ✅ FIXED: Suffix incremented to ?v=5 to wipe low-res history buffers instantly across devices
+    // Clean canonical URL string guarantees chat platforms download the rich image preview asset card
+    const cleanUrl = 'https://cyber-champ-cry.vercel.app/';
+
     const formattedText = `I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.\n` +
                           `My score: ${Math.floor(score)} points 🏆\n` +
                           `Can you do better? Play, learn, and challenge 3 more friends!\n` +
-                          `🎮 https://cyber-champ-cry.vercel.app/?v=5\n` +
+                          `🎮 ${cleanUrl}\n` +
                           `For more on CRY's work for children: www.cry.org`;
-
-    const shareData = {
-      title: "CRY's Cyber Safety Challenge",
-      text: formattedText,
-      url: 'https://cyber-champ-cry.vercel.app/?v=5' 
-    };
 
     try {
       let sharedSuccessfully = false;
 
       if (navigator.share) {
+        // Bundling the text parameter cleanly prevents layout parsing forks on mobile scrapers
         await navigator.share({
-          title: shareData.title,
-          text: shareData.text
+          title: "CRY's Cyber Safety Challenge",
+          text: formattedText
         });
         sharedSuccessfully = true; 
       } else {
-        await navigator.clipboard.writeText(shareData.text);
+        await navigator.clipboard.writeText(formattedText);
         alert("Share details copied to clipboard! Paste it to share with your friends.");
         sharedSuccessfully = true; 
       }
@@ -487,12 +484,11 @@ function App() {
           <h1 className="victory-title-heading" style={{ fontSize: 'calc(2.2rem + 2vw)', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', marginBottom: '10px' }}>CYBER CHAMPION!</h1>
           <p style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Outstanding work, {playerInfo?.name || 'Hero'}!</p>
           
-          {/* ─── FIXED SCORE DETAILS CONTAINER BLOCK (Centers perfectly everywhere with explicit margins) ─── */}
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.1)',
             padding: '20px',
             borderRadius: '25px',
-            margin: '0 auto 30px auto', // ✅ FIXED: horizontal auto centering applied for fluid view blocks
+            margin: '0 auto 30px auto', 
             width: '100%',
             maxWidth: '500px',
             border: '2px solid #8CB63D',
