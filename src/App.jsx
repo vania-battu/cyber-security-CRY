@@ -221,7 +221,7 @@ function App() {
   };
 
   const handleShare = async () => {
-    // Clean canonical URL string guarantees chat platforms download the rich image preview asset card
+    // Reverted completely to a parameter-free clean URL string path
     const cleanUrl = 'https://cyber-champ-cry.vercel.app/';
 
     const formattedText = `I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.\n` +
@@ -234,7 +234,6 @@ function App() {
       let sharedSuccessfully = false;
 
       if (navigator.share) {
-        // Bundling the text parameter cleanly prevents layout parsing forks on mobile scrapers
         await navigator.share({
           title: "CRY's Cyber Safety Challenge",
           text: formattedText
