@@ -221,28 +221,28 @@ function App() {
   };
 
   const handleShare = async () => {
-    const cleanUrl = 'https://cyber-champ-cry.vercel.app/';
+    const gameUrl = 'https://cyber-champ-cry.vercel.app/';
 
-    const formattedText = `I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.\n` +
+    // ✅ FIXED: Everything compiled into one unified text block string wrapper
+    // Passing the link directly within the text forces all devices to copy or transfer the entire block layout cleanly.
+    const fullShareText = `I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.\n` +
                           `My score: ${Math.floor(score)} points 🏆\n` +
                           `Can you do better? Play, learn, and challenge 3 more friends!\n` +
+                          `🎮 ${gameUrl}\n` +
                           `For more on CRY's work for children: www.cry.org`;
 
     try {
       let sharedSuccessfully = false;
 
       if (navigator.share) {
-        // ✅ STRATEGY NATIVE FOR MODERN SMARTPHONES (iPhone 15 Pro, iOS 17+, Android)
-        // Separating the parameters maps cleaner to Apple's native layout render loop
+        // Sending just 'text' stops iOS from strip-truncating the string block parameters
         await navigator.share({
           title: "CRY's Cyber Safety Challenge",
-          text: formattedText,
-          url: cleanUrl 
+          text: fullShareText
         });
         sharedSuccessfully = true; 
       } else {
-        // Desktop / Local System Fallback
-        await navigator.clipboard.writeText(`${formattedText}\n🎮 ${cleanUrl}`);
+        await navigator.clipboard.writeText(fullShareText);
         alert("Share details copied to clipboard! Paste it to share with your friends.");
         sharedSuccessfully = true; 
       }
@@ -449,8 +449,8 @@ function App() {
             <button onClick={handleRestart} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               RETRY MISSION
             </button>
-            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
-              GET SAFETY REPORT
+            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '25px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
+              DOWNLOAD PERFORMANCE CARD
             </button>
           </div>
         </div>
@@ -514,7 +514,7 @@ function App() {
               <span>SHARE THIS GAME- READY LINK</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.66 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" /></svg>
             </button>
-            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '25px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
+            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
               DOWNLOAD PERFORMANCE CARD
             </button>
             <button onClick={handleRestart} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
