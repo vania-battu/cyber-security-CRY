@@ -26,10 +26,9 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
     const [isAssetsLoading, setIsAssetsLoading] = useState(true);
     const timeoutRef = useRef(null);
 
-    // Elevated ground threshold to match standard line height alignment path
     const GROUND_OFFSET_Y = 185;
 
-    // Handle Window Resizing Proportions with fixed safe minimum layout thresholds
+    // Handle Window Resizing Proportions with orientation-aware balancing
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
@@ -43,13 +42,17 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
             
             if (gameRef.current.player) {
                 const isCompressed = width < 1150;
+                const isPortrait = height > width;
                 
-                // ✅ FIXED: Enforces a solid structural baseline scaling factor to prevent micro-shrinking on phone views
-                const scaleFactor = isCompressed ? Math.max(0.75, width / 1000) : 1.0;
+                // ✅ FIXED: Responsive scale factor adapts cleanly to portrait views without clashing
+                const scaleFactor = isCompressed 
+                    ? (isPortrait ? Math.max(0.6, width / 650) : Math.max(0.7, width / 1100)) 
+                    : 1.0;
+                
                 const playerHeight = 130 * scaleFactor;
                 const adjustedY = height - GROUND_OFFSET_Y - playerHeight + (isCompressed ? 15 : 0);
 
-                gameRef.current.player.x = isCompressed ? Math.max(30, width * 0.06) : width * 0.12;
+                gameRef.current.player.x = isCompressed ? Math.max(20, width * 0.05) : width * 0.12;
                 gameRef.current.player.groundY = adjustedY;
                 gameRef.current.player.y = adjustedY;
                 gameRef.current.player.height = playerHeight;
@@ -75,8 +78,10 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         canvas.height = height;
 
         const isCompressed = width < 1150;
-        // ✅ FIXED: Matched size baseline floor parameters across load lifecycle instance nodes
-        const scaleFactor = isCompressed ? Math.max(0.75, width / 1000) : 1.0;
+        const isPortrait = height > width;
+        const scaleFactor = isCompressed 
+            ? (isPortrait ? Math.max(0.6, width / 650) : Math.max(0.7, width / 1100)) 
+            : 1.0;
 
         const playerHeight = 130 * scaleFactor;
         const adjustedY = height - GROUND_OFFSET_Y - playerHeight + (isCompressed ? 15 : 0);
@@ -87,7 +92,7 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
                 const glob = import.meta.glob('../assets/player/run_f*.png', { eager: true, as: 'url' });
                 return Object.keys(glob).sort().map(key => glob[key]);
             })(),
-            x: isCompressed ? Math.max(30, width * 0.06) : width * 0.12,
+            x: isCompressed ? Math.max(20, width * 0.05) : width * 0.12,
             y: adjustedY,
             width: playerHeight,
             height: playerHeight,
@@ -102,7 +107,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         gameRef.current.loopsCompleted = 0;
         gameRef.current.isLevelFinishing = false;
 
-        // Load and verify background image assets asynchronously
         const bgPromises = level.backgrounds.map(bg => {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -112,7 +116,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
             });
         });
 
-        // Load and verify Antagonist character asset asynchronously
         const antPromise = new Promise((resolve) => {
             const img = new Image();
             img.src = level.antagonist.src;
@@ -126,7 +129,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
             img.onerror = () => resolve({ img, ratio: 0.75 });
         });
 
-        // Resolve all core visual assets before initiating screen display modes
         Promise.all([...bgPromises, antPromise]).then((resolvedAssets) => {
             if (!isCurrentLoad) return;
 
@@ -145,7 +147,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         };
     }, [level]);
 
-    // Handle character standing still when paused
     useEffect(() => {
         if (gameRef.current.player) {
             gameRef.current.player.setStill(isPaused || gameRef.current.isLevelFinishing);
@@ -199,7 +200,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw Background Layers safely
         gameRef.current.backgrounds.forEach(bg => {
             const aspect = (bg.img.naturalWidth && bg.img.naturalHeight)
                 ? bg.img.naturalWidth / bg.img.naturalHeight
@@ -211,22 +211,22 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
 
         gameRef.current.player.draw(ctx);
 
-        // Draw Antagonist if finishing or in quiz mode
+        // Draw Antagonist safely configured inside relative space margins
         if ((gameRef.current.isLevelFinishing || isPaused) && gameRef.current.antagonistImg) {
             const canvasWidth = canvas.width;
             const canvasHeight = canvas.height;
             
             const isCompressed = canvasWidth < 1150;
-            const scaleFactor = isCompressed ? Math.max(0.75, canvasWidth / 1000) : 1.0;
+            const isPortrait = canvasHeight - 150 > canvasWidth;
+            const scaleFactor = isCompressed ? (isPortrait ? Math.max(0.6, canvasWidth / 650) : Math.max(0.7, canvasWidth / 1100)) : 1.0;
 
-            const antHeight = 360 * scaleFactor; 
+            // ✅ FIXED: Keeps the antagonist monster from horizontally compressing into Priya on small phones
+            const antHeight = isPortrait ? Math.min(220, 340 * scaleFactor) : 360 * scaleFactor; 
             const antWidth = gameRef.current.antagonistRatio * antHeight;
 
-            // Idle vertical hover animation parameters
-            const floatOffset = Math.sin(Date.now() / 350) * 15;
-
-            const rightPadding = isCompressed ? canvasWidth * 0.05 : canvasWidth * 0.08;
-            const calculatedY = canvasHeight - GROUND_OFFSET_Y - antHeight + floatOffset + (isCompressed ? 45 : 65);
+            const floatOffset = Math.sin(Date.now() / 350) * 12;
+            const rightPadding = isCompressed ? canvasWidth * 0.02 : canvasWidth * 0.08;
+            const calculatedY = canvasHeight - GROUND_OFFSET_Y - antHeight + floatOffset + (isCompressed ? 35 : 65);
 
             ctx.drawImage(
                 gameRef.current.antagonistImg,
@@ -243,7 +243,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         draw();
     }, false);
 
-    // Input Handling
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.code === 'Space' || e.code === 'ArrowUp') {
