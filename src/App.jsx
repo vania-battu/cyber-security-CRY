@@ -24,6 +24,7 @@ import globalBgmAsset from './assets/audio/final_bgm.mp3';
 const levels = [level1, level2, level3, level4, level5];
 
 const SHEET_URL = "https://script.google.com/macros/s/AKfycbwZmQVyvcZ03zA58UmKFOd04LbbML1pj2Bwu9Nqw8qT65w-sEk7RfohD6bIOXyGtUc7/exec";
+
 function App() {
   const [gameState, setGameState] = useState('LANDING'); 
   const [currentLevelIdx, setCurrentLevelIdx] = useState(0);
@@ -31,7 +32,7 @@ function App() {
   const [score, setScore] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [activeEnemy, setActiveEnemy] = useState(null);
-  const [playerInfo, setPlayerInfo] = useState(null); // Expects: { name, age, gender, ... }
+  const [playerInfo, setPlayerInfo] = useState(null); 
   const [questionQueue, setQuestionQueue] = useState([]);
   const [correctCount, setCorrectCount] = useState(0);
   const [questionHistory, setQuestionHistory] = useState([]);
@@ -40,29 +41,24 @@ function App() {
   const [hasShared, setHasShared] = useState(false);
   const [sessionId, setSessionId] = useState(null);
 
-  // Audio Controller Instances Tracker
   const quizAudioRef = useRef(null);
   const globalBgmRef = useRef(null);
 
   // Initialize both Audio tracks securely once on mount
   useEffect(() => {
-    // 1. Setup Quiz Audio
     const quizAudio = new Audio(quizMusicAsset);
     quizAudio.loop = true;
     quizAudio.volume = 0.4;
     quizAudioRef.current = quizAudio;
 
-    // 2. Setup Global Background Music
     const globalBgm = new Audio(globalBgmAsset);
     globalBgm.loop = true; 
     globalBgm.volume = 0.35; 
     globalBgmRef.current = globalBgm;
 
-    // Global listener to instantly kick-start the music on the landing page at first interaction
     const startBgmOnInteraction = () => {
       if (globalBgmRef.current && gameState !== 'GURU_TIP' && gameState !== 'QUIZ') {
         globalBgmRef.current.play().then(() => {
-          // Clean up listeners once successfully playing
           window.removeEventListener('click', startBgmOnInteraction);
           window.removeEventListener('touchstart', startBgmOnInteraction);
         }).catch(err => console.log("BGM playback update waiting on gesture:", err));
@@ -98,7 +94,6 @@ function App() {
     } else {
       quizAudioRef.current.pause();
 
-      // Ensures seamless playback continuation across all pages, including landing/login loops
       globalBgmRef.current.play().catch(err => {
         console.log("Global BGM auto-resume deferred until layout interaction:", err);
       });
@@ -122,7 +117,7 @@ function App() {
   const level = levels[currentLevelIdx];
 
   const handleStart = (info) => {
-    setPlayerInfo(info); // Ensure StartScreen component returns values for name, age, and gender fields
+    setPlayerInfo(info); 
     setGameState('STORY');
     setLives(3);
     setScore(0);
@@ -445,8 +440,8 @@ function App() {
             <button onClick={handleRestart} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               RETRY MISSION
             </button>
-            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '25px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
-              DOWNLOAD PERFORMANCE CARD
+            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
+              PLAY AGAIN
             </button>
           </div>
         </div>

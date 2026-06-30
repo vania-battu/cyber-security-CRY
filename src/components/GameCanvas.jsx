@@ -15,7 +15,7 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         loopsCompleted: 0,
         isLevelFinishing: false,
         antagonistImg: null,
-        antagonistRatio: 0.75 // Solid internal fallback reference
+        antagonistRatio: 0.75 
     });
 
     const [dimensions, setDimensions] = useState({
@@ -26,10 +26,10 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
     const [isAssetsLoading, setIsAssetsLoading] = useState(true);
     const timeoutRef = useRef(null);
 
-    // ✅ FIXED: Increased from 155 to 185 to lift Priya 2-3 units higher so she floats right on the path line
+    // Elevated ground threshold to match standard line height alignment path
     const GROUND_OFFSET_Y = 185;
 
-    // Handle Window Resizing Proportions
+    // Handle Window Resizing Proportions with fixed safe minimum layout thresholds
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
@@ -43,12 +43,13 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
             
             if (gameRef.current.player) {
                 const isCompressed = width < 1150;
-                const scaleFactor = isCompressed ? Math.max(0.55, width / 1300) : 1.0;
-
+                
+                // ✅ FIXED: Enforces a solid structural baseline scaling factor to prevent micro-shrinking on phone views
+                const scaleFactor = isCompressed ? Math.max(0.75, width / 1000) : 1.0;
                 const playerHeight = 130 * scaleFactor;
                 const adjustedY = height - GROUND_OFFSET_Y - playerHeight + (isCompressed ? 15 : 0);
 
-                gameRef.current.player.x = isCompressed ? Math.max(20, width * 0.05) : width * 0.12;
+                gameRef.current.player.x = isCompressed ? Math.max(30, width * 0.06) : width * 0.12;
                 gameRef.current.player.groundY = adjustedY;
                 gameRef.current.player.y = adjustedY;
                 gameRef.current.player.height = playerHeight;
@@ -63,7 +64,7 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
     // Asynchronous Asset Management Lifecycle Block
     useEffect(() => {
         let isCurrentLoad = true;
-        setIsAssetsLoading(true); // Lock engine threads while collecting image dimensions
+        setIsAssetsLoading(true); 
 
         const canvas = canvasRef.current;
         if (!canvas) return;
@@ -74,7 +75,8 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         canvas.height = height;
 
         const isCompressed = width < 1150;
-        const scaleFactor = isCompressed ? Math.max(0.55, width / 1300) : 1.0;
+        // ✅ FIXED: Matched size baseline floor parameters across load lifecycle instance nodes
+        const scaleFactor = isCompressed ? Math.max(0.75, width / 1000) : 1.0;
 
         const playerHeight = 130 * scaleFactor;
         const adjustedY = height - GROUND_OFFSET_Y - playerHeight + (isCompressed ? 15 : 0);
@@ -85,7 +87,7 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
                 const glob = import.meta.glob('../assets/player/run_f*.png', { eager: true, as: 'url' });
                 return Object.keys(glob).sort().map(key => glob[key]);
             })(),
-            x: isCompressed ? Math.max(20, width * 0.05) : width * 0.12,
+            x: isCompressed ? Math.max(30, width * 0.06) : width * 0.12,
             y: adjustedY,
             width: playerHeight,
             height: playerHeight,
@@ -161,7 +163,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         gameRef.current.distanceTraveled += speed;
         gameRef.current.player.update();
 
-        // ✅ BALANCED RUNTIME FIX: Set Level 1 to 2 loops instead of 3 to shorten its duration slightly
         const targetLoops = (level.title === "Level 1" || level.id === 1) ? 2 : 3;
 
         gameRef.current.backgrounds.forEach(bg => {
@@ -216,7 +217,7 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
             const canvasHeight = canvas.height;
             
             const isCompressed = canvasWidth < 1150;
-            const scaleFactor = isCompressed ? Math.max(0.55, canvasWidth / 1300) : 1.0;
+            const scaleFactor = isCompressed ? Math.max(0.75, canvasWidth / 1000) : 1.0;
 
             const antHeight = 360 * scaleFactor; 
             const antWidth = gameRef.current.antagonistRatio * antHeight;
@@ -224,7 +225,7 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
             // Idle vertical hover animation parameters
             const floatOffset = Math.sin(Date.now() / 350) * 15;
 
-            const rightPadding = isCompressed ? canvasWidth * 0.04 : canvasWidth * 0.08;
+            const rightPadding = isCompressed ? canvasWidth * 0.05 : canvasWidth * 0.08;
             const calculatedY = canvasHeight - GROUND_OFFSET_Y - antHeight + floatOffset + (isCompressed ? 45 : 65);
 
             ctx.drawImage(
