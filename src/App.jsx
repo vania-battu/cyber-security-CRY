@@ -23,7 +23,7 @@ import globalBgmAsset from './assets/audio/final_bgm.mp3';
 
 const levels = [level1, level2, level3, level4, level5];
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbwpg0_juFJrS_6ZzmrMzcw-2TRUa-3cUOaqot7Ie-w-VGAq-EhzgUgNeVPZDLW-tAs/exec";
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwZmQVyvcZ03zA58UmKFOd04LbbML1pj2Bwu9Nqw8qT65w-sEk7RfohD6bIOXyGtUc7/exec";
 function App() {
   const [gameState, setGameState] = useState('LANDING'); 
   const [currentLevelIdx, setCurrentLevelIdx] = useState(0);
