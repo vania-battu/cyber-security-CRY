@@ -23,8 +23,7 @@ import globalBgmAsset from './assets/audio/final_bgm.mp3';
 
 const levels = [level1, level2, level3, level4, level5];
 
-const SHEET_URL = "https://script.google.com/macros/s/AKfycbxzW2Ka-ZllIgEYZYOvP3GnYJh8xzYgM852a6ItUMdNTHwFfv08vlM9OXcyqI0DnyVfBA/exec";
-
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbwpg0_juFJrS_6ZzmrMzcw-2TRUa-3cUOaqot7Ie-w-VGAq-EhzgUgNeVPZDLW-tAs/exec";
 function App() {
   const [gameState, setGameState] = useState('LANDING'); 
   const [currentLevelIdx, setCurrentLevelIdx] = useState(0);
@@ -32,7 +31,7 @@ function App() {
   const [score, setScore] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(null);
   const [activeEnemy, setActiveEnemy] = useState(null);
-  const [playerInfo, setPlayerInfo] = useState(null);
+  const [playerInfo, setPlayerInfo] = useState(null); // Expects: { name, age, gender, ... }
   const [questionQueue, setQuestionQueue] = useState([]);
   const [correctCount, setCorrectCount] = useState(0);
   const [questionHistory, setQuestionHistory] = useState([]);
@@ -107,7 +106,7 @@ function App() {
   }, [gameState]);
 
   const submitToSheet = (data) => {
-    console.log("Submitting:", JSON.stringify(data));
+    console.log("Submitting to sheet:", JSON.stringify(data));
     fetch(SHEET_URL, {
       method: 'POST',
       mode: 'no-cors',
@@ -123,7 +122,7 @@ function App() {
   const level = levels[currentLevelIdx];
 
   const handleStart = (info) => {
-    setPlayerInfo(info);
+    setPlayerInfo(info); // Ensure StartScreen component returns values for name, age, and gender fields
     setGameState('STORY');
     setLives(3);
     setScore(0);
@@ -223,8 +222,6 @@ function App() {
   const handleShare = async () => {
     const gameUrl = 'https://cyber-champ-cry.vercel.app/';
 
-    // ✅ FIXED: Everything compiled into one unified text block string wrapper
-    // Passing the link directly within the text forces all devices to copy or transfer the entire block layout cleanly.
     const fullShareText = `I just completed CRY's Cyber Safety Challenge—a fun game that tests how safely children (can) navigate the online world.\n` +
                           `My score: ${Math.floor(score)} points 🏆\n` +
                           `Can you do better? Play, learn, and challenge 3 more friends!\n` +
@@ -235,7 +232,6 @@ function App() {
       let sharedSuccessfully = false;
 
       if (navigator.share) {
-        // Sending just 'text' stops iOS from strip-truncating the string block parameters
         await navigator.share({
           title: "CRY's Cyber Safety Challenge",
           text: fullShareText
@@ -514,10 +510,7 @@ function App() {
               <span>SHARE THIS GAME- READY LINK</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.66 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" /></svg>
             </button>
-            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
-              DOWNLOAD PERFORMANCE CARD
-            </button>
-            <button onClick={handleRestart} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
+            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               PLAY AGAIN
             </button>
           </div>
