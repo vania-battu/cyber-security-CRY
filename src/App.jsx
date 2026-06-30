@@ -75,6 +75,7 @@ function App() {
     };
   }, []);
 
+  // Master Audio Lifecycle System Manager
   useEffect(() => {
     if (!quizAudioRef.current || !globalBgmRef.current) return;
 
@@ -293,7 +294,8 @@ function App() {
       overflowY: 'auto'
     }}>
       {/* Global CRY Logo Header */}
-      {gameState !== 'LANDING' && gameState !== 'LEVEL_INTRO' && (
+      {/* 📢 FIXED: Added !== 'VICTORY' logic condition to prevent double logo stacking error on phone screens */}
+      {gameState !== 'LANDING' && gameState !== 'LEVEL_INTRO' && gameState !== 'VICTORY' && (
         <div className="global-cry-logo" style={{
           position: 'absolute',
           top: '-8px', 
@@ -438,8 +440,8 @@ function App() {
             <button onClick={handleRestart} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               RETRY MISSION
             </button>
-            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
-              GET SAFETY REPORT
+            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
+              PLAY AGAIN
             </button>
           </div>
         </div>
@@ -473,6 +475,7 @@ function App() {
           <h1 className="victory-title-heading" style={{ fontSize: 'calc(2.2rem + 2vw)', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', marginBottom: '10px' }}>CYBER CHAMPION!</h1>
           <p style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Outstanding work, {playerInfo?.name || 'Hero'}!</p>
           
+          {/* FIXED SCORE DETAILS CONTAINER BLOCK */}
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.1)',
             padding: '20px',
@@ -496,7 +499,7 @@ function App() {
             </p>
           </div>
 
-          {/* ✅ RESTORED & FLEX OPTIMIZED BUTTON GROUP CONTAINER */}
+          {/* BUTTON GROUP CONTAINER */}
           <div className="victory-buttons-group" style={{ display: 'flex', gap: '12px', flexDirection: 'column', width: '100%', maxWidth: '400px' }}>
             <button onClick={handleShare} style={{ width: '100%', padding: '14px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
               <span>SHARE THIS GAME- READY LINK</span>
