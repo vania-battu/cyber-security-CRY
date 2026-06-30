@@ -28,7 +28,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
 
     const GROUND_OFFSET_Y = 185;
 
-    // Handle Window Resizing Proportions with orientation-aware balancing
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
@@ -44,7 +43,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
                 const isCompressed = width < 1150;
                 const isPortrait = height > width;
                 
-                // ✅ FIXED: Responsive scale factor adapts cleanly to portrait views without clashing
                 const scaleFactor = isCompressed 
                     ? (isPortrait ? Math.max(0.6, width / 650) : Math.max(0.7, width / 1100)) 
                     : 1.0;
@@ -64,7 +62,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Asynchronous Asset Management Lifecycle Block
     useEffect(() => {
         let isCurrentLoad = true;
         setIsAssetsLoading(true); 
@@ -86,7 +83,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
         const playerHeight = 130 * scaleFactor;
         const adjustedY = height - GROUND_OFFSET_Y - playerHeight + (isCompressed ? 15 : 0);
 
-        // Initialize Player Sprite
         gameRef.current.player = new Player({
             imageArray: (() => {
                 const glob = import.meta.glob('../assets/player/run_f*.png', { eager: true, as: 'url' });
@@ -211,7 +207,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
 
         gameRef.current.player.draw(ctx);
 
-        // Draw Antagonist safely configured inside relative space margins
         if ((gameRef.current.isLevelFinishing || isPaused) && gameRef.current.antagonistImg) {
             const canvasWidth = canvas.width;
             const canvasHeight = canvas.height;
@@ -220,7 +215,6 @@ const GameCanvas = ({ level, isPaused, onLevelComplete, lives, onGameOver, onSco
             const isPortrait = canvasHeight - 150 > canvasWidth;
             const scaleFactor = isCompressed ? (isPortrait ? Math.max(0.6, canvasWidth / 650) : Math.max(0.7, canvasWidth / 1100)) : 1.0;
 
-            // ✅ FIXED: Keeps the antagonist monster from horizontally compressing into Priya on small phones
             const antHeight = isPortrait ? Math.min(220, 340 * scaleFactor) : 360 * scaleFactor; 
             const antWidth = gameRef.current.antagonistRatio * antHeight;
 

@@ -44,7 +44,6 @@ function App() {
   const quizAudioRef = useRef(null);
   const globalBgmRef = useRef(null);
 
-  // Initialize both Audio tracks securely once on mount
   useEffect(() => {
     const quizAudio = new Audio(quizMusicAsset);
     quizAudio.loop = true;
@@ -76,7 +75,6 @@ function App() {
     };
   }, []);
 
-  // Master Audio Lifecycle System Manager
   useEffect(() => {
     if (!quizAudioRef.current || !globalBgmRef.current) return;
 
@@ -440,8 +438,8 @@ function App() {
             <button onClick={handleRestart} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               RETRY MISSION
             </button>
-            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
-              PLAY AGAIN
+            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '14px', fontSize: '1.2rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
+              GET SAFETY REPORT
             </button>
           </div>
         </div>
@@ -456,7 +454,6 @@ function App() {
           zIndex: 300, fontFamily: '"Riona Sans W01 Regular", sans-serif', textAlign: 'center',
           padding: '80px 20px 20px 20px', boxSizing: 'border-box'
         }}>
-          {/* Inline structural wrapper for Mobile Logo layout tracking */}
           <div className="victory-mobile-logo-spacer" style={{ display: 'none', width: '100%', justifyContent: 'center', marginBottom: '15px' }}>
              <div style={{ backgroundColor: 'white', padding: '12px 24px', borderRadius: '0 0 25px 25px', boxShadow: '0 4px 15px rgba(0,0,0,0.2)', overflow: 'hidden', marginTop: '-8px' }}>
                 <img 
@@ -476,7 +473,6 @@ function App() {
           <h1 className="victory-title-heading" style={{ fontSize: 'calc(2.2rem + 2vw)', fontWeight: 'normal', fontFamily: '"Riona Sans W04 Black", sans-serif', color: '#ffd806', marginBottom: '10px' }}>CYBER CHAMPION!</h1>
           <p style={{ fontSize: '1.5rem', marginBottom: '15px' }}>Outstanding work, {playerInfo?.name || 'Hero'}!</p>
           
-          {/* FIXED SCORE DETAILS CONTAINER BLOCK */}
           <div style={{
             backgroundColor: 'rgba(255,255,255,0.1)',
             padding: '20px',
@@ -500,17 +496,21 @@ function App() {
             </p>
           </div>
 
-          <div className="victory-buttons-group" style={{ display: 'flex', gap: '15px', flexDirection: 'column', width: '100%', maxWidth: '400px' }}>
-            <button onClick={handleShare} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+          {/* ✅ RESTORED & FLEX OPTIMIZED BUTTON GROUP CONTAINER */}
+          <div className="victory-buttons-group" style={{ display: 'flex', gap: '12px', flexDirection: 'column', width: '100%', maxWidth: '400px' }}>
+            <button onClick={handleShare} style={{ width: '100%', padding: '14px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
               <span>SHARE THIS GAME- READY LINK</span>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="black"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.66 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z" /></svg>
             </button>
-            <button onClick={handleRestart} style={{ width: '100%', padding: '15px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
+            <button onClick={handleDownloadReport} style={{ width: '100%', padding: '14px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: '2px solid #fff', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: 'transparent', color: '#fff' }}>
+              DOWNLOAD PERFORMANCE CARD
+            </button>
+            <button onClick={handleRestart} style={{ width: '100%', padding: '14px', fontSize: '1.1rem', cursor: 'pointer', borderRadius: '50px', border: 'none', fontFamily: '"Riona Sans W04 Black", sans-serif', backgroundColor: '#ffd806', color: 'black' }}>
               PLAY AGAIN
             </button>
           </div>
-          <div className="victory-footer-text" style={{ marginTop: '30px', opacity: 0.8, paddingBottom: '30px' }}>
-            <p style={{ fontSize: '1rem', margin: '5px 0' }}>Remember: Use Technology responsibly and stay safe!</p>
+          <div className="victory-footer-text" style={{ marginTop: '20px', opacity: 0.8, paddingBottom: '30px' }}>
+            <p style={{ fontSize: '0.95rem', margin: '5px 0' }}>Remember: Use Technology responsibly and stay safe!</p>
             <p style={{ margin: '5px 0', fontSize: '0.8rem' }}>© CRY - Child Rights and You</p>
           </div>
         </div>
@@ -547,12 +547,15 @@ function App() {
           
           .victory-modal-container {
             position: relative !important;
-            display: block !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: flex-start !important;
+            align-items: center !important;
             width: 100% !important;
             height: auto !important;
             min-height: 100vh !important;
             overflow-y: auto !important;
-            padding: 0px 16px 40px 16px !important;
+            padding: 20px 16px 40px 16px !important;
           }
           
           .responsive-modal-panel {
@@ -564,12 +567,12 @@ function App() {
           }
           
           .victory-buttons-group {
-            margin: 0 auto 25px auto !important;
+            margin: 0 auto 15px auto !important;
           }
           
           .victory-footer-text {
-            margin-top: 15px !important;
-            padding-bottom: 35px !important;
+            margin-top: 10px !important;
+            padding-bottom: 20px !important;
             display: block !important;
           }
         }
